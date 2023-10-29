@@ -1,0 +1,101 @@
+<?php
+
+use App\Http\Controllers\AdminRoleController;
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\AppointmentRequestController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PanelMemberController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\StudentListController;
+use App\Http\Controllers\StudentSubmissionController;
+use App\Http\Controllers\SubmissionController;
+use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\TrackingController;
+use App\Http\Controllers\UserController;
+use App\Models\Appointment;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
+
+// Accessible routes when logged out
+Route::middleware(['guest'])->group(function () {
+    Route::get('/', function () {
+        return view('welcome');
+    });
+
+    Route::get('/login', [AuthController::class, 'index'])->name('login');
+    Route::post('/authenticate', [AuthController::class, 'authenticate'])->name('authenticate');
+
+    Route::get('/register', [RegisterController::class, 'index'])->name('register');
+    Route::post('/register', [RegisterController::class, 'register'])->name('post.register');
+});
+
+// Accessible routes when logged in as any role
+Route::middleware(['auth'])->group(function () {
+    
+    Route::resource('dashboard', DashboardController::class)->only('index');
+
+    Route::prefix('appointments')->name('appointments.')->group(function() {
+        Route::resource('requests', AppointmentRequestController::class);
+    });
+
+    //appointments api
+    Route::get('/appointments/get', [AppointmentController::class, 'get']);
+    Route::resource('appointments', AppointmentController::class);
+
+    Route::resource('reports', ReportController::class);
+
+    Route::get('/submissions/{submission}', [SubmissionController::class, 'show'])->name('submission');
+    Route::post('/submissions/{submission}/check', [SubmissionController::class, 'check'])->name('submission.check');
+
+    Route::resource('tracking', TrackingController::class);
+    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+});
+
+// Accessible routes when logged in as an admin
+Route::middleware(['auth', 'isAdmin'])->group(function() {
+    Route::resource('users', UserController::class);
+    Route::resource('students', StudentController::class);
+    Route::resource('teachers', TeacherController::class);
+});
+
+// Accessible routes when logged in as an admin or as a student
+Route::middleware(['auth', 'isAdmin', 'isStudent'])->group(function() {
+    Route::resource('chatbot', ChatbotController::class);
+});
+
+// Accessible routes when logged in as a faculty
+Route::middleware(['auth', 'isEmployee'])->group(function() {
+    Route::put('/dashboard/{studentFile}', [DashboardController::class, 'update'])->name('dashboard.update');
+
+    Route::prefix('admin-roles')->name('admin-roles.')->group(function() {
+        Route::get('/{role}/students', [StudentListController::class, 'index'])->name('students.index');
+    });
+
+    Route::resource('admin-roles', AdminRoleController::class);
+});
+
+// Accessible routes when logged in as a student
+Route::middleware(['auth', 'isStudent'])->group(function() {
+    Route::prefix('panel-members')->name('panel-members.')->group(function() {
+        Route::get('/{role}/submissions/submit/{type}', [StudentSubmissionController::class, 'create'])->name('submissions.create');
+        Route::post('/{role}/submissions/submit/', [StudentSubmissionController::class, 'store'])->name('submissions.store');
+        Route::get('/{role}/submissions', [StudentSubmissionController::class, 'index'])->name('submissions.index');
+    });
+
+    Route::resource('panel-members', PanelMemberController::class);
+});
+
