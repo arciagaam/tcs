@@ -25,6 +25,10 @@
         @apply px-2 text-sm
     }
 
+    button:disabled {
+        @apply !bg-gray-300 hover:!brightness-100 !text-gray-400 ring-1 ring-gray-300 pointer-events-none
+    }
+
     .button {
         @apply py-2 px-4 w-fit rounded-full transition-all flex items-center justify-center
     }

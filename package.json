@@ -2,7 +2,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "vite",
+        "dev": "concurrently \"vite\" \"php artisan serve\" \"nohup php artisan queue:work --daemon &\"",
         "build": "php artisan storage:link && vite build",
         "resetsl": "rm -f public/storage"
     },
@@ -20,6 +20,7 @@
         "@fullcalendar/interaction": "^6.1.9",
         "@fullcalendar/list": "^6.1.9",
         "@fullcalendar/timegrid": "^6.1.9",
-        "boxicons": "^2.1.4"
+        "boxicons": "^2.1.4",
+        "concurrently": "^8.2.2"
     }
 }

@@ -119,7 +119,7 @@
                         @enderror
                     </div>
                     <div class="flex flex-col w-full">
-                        <button class="self-end w-full button default">Request Appointment</button>
+                        <button class="async self-end w-full button default">Request Appointment</button>
                     </div>
                 </form>
             </div>
@@ -134,3 +134,4 @@
 
 @vite('resources/js/calendar.js')
 @vite('resources/js/ISOInput.js')
+@vite('resources/js/asyncButton.js')

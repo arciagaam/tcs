@@ -27,7 +27,7 @@ class AuthController extends Controller
             return redirect('/');
         }
 
-        return redirect()->route('login');
+        return redirect()->route('login')->with('error', 'Invalid username or password');
     }
 
     public function logout(Request $request) {

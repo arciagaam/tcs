@@ -6,6 +6,7 @@ use App\Http\Controllers\AppointmentRequestController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\PanelMemberController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ReportController;
@@ -41,6 +42,19 @@ Route::middleware(['guest'])->group(function () {
 
     Route::get('/register', [RegisterController::class, 'index'])->name('register');
     Route::post('/register', [RegisterController::class, 'register'])->name('post.register');
+
+    Route::prefix('forgot-password')->name('forgot-password.')->group(function() {
+
+        Route::get('step-one', [ForgotPasswordController::class, 'stepOne'])->name('step-one');
+        Route::post('step-one', [ForgotPasswordController::class, 'postStepOne'])->name('post.step-one');
+        
+        Route::get('step-two', [ForgotPasswordController::class, 'stepTwo'])->name('step-two');
+        Route::post('step-two', [ForgotPasswordController::class, 'postStepTwo'])->name('post.step-two');
+
+        Route::get('step-three', [ForgotPasswordController::class, 'stepThree'])->name('step-three');
+        Route::post('step-three', [ForgotPasswordController::class, 'postStepThree'])->name('post.step-three');
+
+    });
 });
 
 // Accessible routes when logged in as any role

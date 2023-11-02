@@ -58,13 +58,14 @@ class AppointmentController extends Controller
         $students = Student::where('group_code', $request->validated('group_code'))->get();
 
         $studentIds = $students->map(fn($val) => $val->id);
-        $teacherIds = TeacherStudent::whereIn('student_id', $studentIds)->groupBy('teacher_id')->select('teacher_id')->get();
+        $userRoleIds = TeacherStudent::whereIn('student_id', $studentIds)->groupBy('teacher_id')->select('teacher_id')->get();
+        $teacherIds = UserRole::whereIn('user_id', $userRoleIds)->groupBy('user_id')->select('user_id')->get();
         $teachers = User::whereIn('id', $teacherIds)->get();
 
         if (checkRole(auth()->user(), [5])) {
             
             foreach ($teachers as $teacher) {
-                Mail::to($teacher->email)->send(new StudentAppointmentRequestMail(formatName($teacher), $request->validated('group_code'), Carbon::parse($request->validated('start_date'))->format('m/d h:m')));
+                Mail::to($teacher->email)->queue(new StudentAppointmentRequestMail(formatName($teacher), $request->validated('group_code'), Carbon::parse($request->validated('start_date'))->format('m/d h:m')));
                 // $this->sendSMS(TEACHER NUMBER, CONTENT SA MAIL);
             }
             
@@ -73,12 +74,12 @@ class AppointmentController extends Controller
         } else {
 
             foreach ($teachers as $teacher) {
-                Mail::to($teacher->email)->send(new TeacherAppointmentMail(formatName($teacher, false), $request->validated('group_code'), Carbon::parse($request->validated('start_date'))->format('m/d h:m')));
+                Mail::to($teacher->email)->queue(new TeacherAppointmentMail(formatName($teacher, false), $request->validated('group_code'), Carbon::parse($request->validated('start_date'))->format('m/d h:m')));
                 // $this->sendSMS(TEACHER NUMBER, CONTENT SA MAIL);
             }
 
             foreach ($students as $student) {
-                Mail::to($student->user->email)->send(new StudentAppointmentMail(formatName($student->user, false), $request->validated('group_code'), Carbon::parse($request->validated('start_date'))->format('m/d h:m')));
+                Mail::to($student->user->email)->queue(new StudentAppointmentMail(formatName($student->user, false), $request->validated('group_code'), Carbon::parse($request->validated('start_date'))->format('m/d h:m')));
                 // $this->sendSMS(STUDENT NUMBER, CONTENT SA MAIL);
             }
 
