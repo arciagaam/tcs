@@ -1,7 +1,0 @@
-php_value memory_limit 4294967296
- 
-php_value post
- maxsize 1073741824
- 
-php_value upload
- maxfilesize 524288000
