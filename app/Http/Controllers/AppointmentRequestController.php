@@ -22,14 +22,12 @@ class AppointmentRequestController extends Controller
             $studentIds = TeacherStudent::whereIn('teacher_id', $teacherIds)->get()->map(fn($value) => $value->student_id);
             $groupCodes = Student::whereIn('id', $studentIds)->get()->map(fn($value) => $value->group_code);
 
-            $appointments = Appointment::whereIn('group_code', $groupCodes)->with(['user.student'])->paginate(10);
+            $pendingAppointments = Appointment::whereIn('group_code', $groupCodes)->with(['user.student'])->where('status', 1)->paginate(10);
+            $appointmentsList = Appointment::whereIn('group_code', $groupCodes)->with(['user.student'])->where('status', '!=', 1)->paginate(10);
         } else {
-            $appointments = Appointment::with(['user.student'])->paginate(10);
-
+            $pendingAppointments = Appointment::with(['user.student'])->where('status', 1)->paginate(10);
+            $appointmentsList = Appointment::with(['user.student'])->where('status', '!=', 1)->paginate(10);
         }
-
-        $pendingAppointments = collect($appointments->items())->filter(fn($value) => $value->status == 1);
-        $appointmentsList = collect($appointments->items())->filter(fn($value) => $value->status != 1);
         
         return view('pages.appointments.requests.index', compact('pendingAppointments', 'appointmentsList'));
     }

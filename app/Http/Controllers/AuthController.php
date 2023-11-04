@@ -17,7 +17,7 @@ class AuthController extends Controller
         if(auth()->attempt($request->validated())) {
 
             if(checkRole(auth()->user(), [5])) {
-                return redirect()->route('panel-members.index');
+                return redirect()->route('home.index');
             }
             
             if(checkRole(auth()->user(), [2,3,4])) {

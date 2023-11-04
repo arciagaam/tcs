@@ -4,22 +4,22 @@
     <div class="grid grid-cols-2 w-full gap-5">
         <div class="flex flex-col gap-5 py-10 items-center px-5 bg-white shadow-sm rounded-lg">
             <h2>Students</h2>
-            <p>21</p>
+            <p>{{$studentCount}}</p>
         </div>
 
         <div class="flex flex-col gap-5 py-10 items-center px-5 bg-white shadow-sm rounded-lg">
             <h2>Team Members</h2>
-            <p>21</p>
+            <p>{{$groupCount}}</p>
         </div>
 
         <div class="flex flex-col gap-5 py-10 items-center px-5 bg-white shadow-sm rounded-lg">
             <h2>Appointment</h2>
-            <p>10</p>
+            <p>{{$appointmentCount}}</p>
         </div>
 
         <div class="flex flex-col gap-5 py-10 items-center px-5 bg-white shadow-sm rounded-lg">
             <h2>Reports</h2>
-            <p>10</p>
+            <p>{{$reportCount}}</p>
         </div>
     </div>
 

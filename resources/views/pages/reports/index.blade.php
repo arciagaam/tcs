@@ -131,7 +131,7 @@
             </div>
 
             <div class="flex">
-                {{-- {{$users->links()}} --}}
+                {{$pendingReports->links()}}
             </div>
         </div>
 
@@ -180,7 +180,7 @@
             </div>
 
             <div class="flex">
-                {{-- {{$users->links()}} --}}
+                {{$reportsList->links()}}
             </div>
         </div>
     @endif

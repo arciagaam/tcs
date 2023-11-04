@@ -13,7 +13,9 @@ class StudentController extends Controller
     public function index()
     {
         $students = Student::with(['user'])->paginate(20);
+
         if(checkRole(auth()->user(), [1])) {
+
         } else {
             
             // $studentIdArray = Student::with(['user' => function($query){

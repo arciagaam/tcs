@@ -49,7 +49,7 @@
         </div>
 
         <div class="flex">
-            {{-- {{$users->links()}} --}}
+            {{$trackings->links()}}
         </div>
     </div>
 </x-layout>

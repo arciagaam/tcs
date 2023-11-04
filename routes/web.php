@@ -8,9 +8,11 @@ use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\PanelMemberController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\StudentDashboardController;
 use App\Http\Controllers\StudentListController;
 use App\Http\Controllers\StudentSubmissionController;
 use App\Http\Controllers\SubmissionController;
@@ -59,7 +61,6 @@ Route::middleware(['guest'])->group(function () {
 
 // Accessible routes when logged in as any role
 Route::middleware(['auth'])->group(function () {
-    
     Route::resource('dashboard', DashboardController::class)->only('index');
 
     Route::prefix('appointments')->name('appointments.')->group(function() {
@@ -104,6 +105,9 @@ Route::middleware(['auth', 'isEmployee'])->group(function() {
 
 // Accessible routes when logged in as a student
 Route::middleware(['auth', 'isStudent'])->group(function() {
+    Route::resource('home', StudentDashboardController::class);
+    Route::resource('profile', ProfileController::class);
+
     Route::prefix('panel-members')->name('panel-members.')->group(function() {
         Route::get('/{role}/submissions/submit/{type}', [StudentSubmissionController::class, 'create'])->name('submissions.create');
         Route::post('/{role}/submissions/submit/', [StudentSubmissionController::class, 'store'])->name('submissions.store');

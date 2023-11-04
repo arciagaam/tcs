@@ -46,6 +46,6 @@
     </div>
 
     <div class="flex">
-        {{-- {{$users->links()}} --}}
+        {{$students->links()}}
     </div>
 </x-layout>

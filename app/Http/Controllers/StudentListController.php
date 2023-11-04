@@ -20,7 +20,7 @@ class StudentListController extends Controller
     {
         $teacherId = UserRole::where('user_id', auth()->user()->id)->where('role_id', $role->id)->first()->id;
         $students = TeacherStudent::with('student')->where('teacher_id', $teacherId)->get()->map(fn($value) => $value->student_id)->values();
-        $submissions = StudentSubmission::with('student.user')->whereIn('student_id', $students)->where('role_id', $role->id)->get();
+        $submissions = StudentSubmission::with('student.user')->whereIn('student_id', $students)->where('role_id', $role->id)->paginate(20);
         return view('pages.admin_pages.students.list.index', compact('submissions', 'role'));
     }
 

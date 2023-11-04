@@ -1,5 +1,8 @@
 <x-layout>
-    <x-page-title>Student Submissions as {{ $role->name }} </x-page-title>
+    <div class="flex flex-col gap-1">
+        <a href="{{route('admin-roles.index')}}" class="underline w-fit">Back to Role Selection</a>
+        <x-page-title>Student Submissions as {{ $role->name }} </x-page-title>
+    </div>
     
     <div class="flex flex-col bg-white p-5 rounded-lg shadow-sm gap-5">
 
@@ -47,6 +50,6 @@
     </div>
 
     <div class="flex">
-        {{-- {{$users->links()}} --}}
+        {{$submissions->links()}}
     </div>
 </x-layout>

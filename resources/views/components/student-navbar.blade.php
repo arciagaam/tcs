@@ -1,9 +1,9 @@
-<a href="#" class="nav-item {{request()->is('dashboard*') ? 'hover:bg-primary-900 bg-primary-900 text-white fill-white' : ''}}">
-    <box-icon type='solid' name='home' color='{{request()->is('dashboard*') ? 'white' : '#8c2e2e'}}'></box-icon>
-    <p class="text-sm">Dashboard</p>
+<a href="{{route('home.index')}}" class="nav-item {{request()->is('home*') ? 'hover:bg-primary-900 bg-primary-900 text-white fill-white' : ''}}">
+    <box-icon type='solid' name='home' color='{{request()->is('home*') ? 'white' : '#8c2e2e'}}'></box-icon>
+    <p class="text-sm">Home</p>
 </a>
 
-<a href="#" class="nav-item {{request()->is('profile*') ? 'hover:bg-primary-900 bg-primary-900 text-white fill-white' : ''}}">
+<a href="{{route('profile.index')}}" class="nav-item {{request()->is('profile*') ? 'hover:bg-primary-900 bg-primary-900 text-white fill-white' : ''}}">
     <box-icon type='solid' name='user' color='{{request()->is('profile*') ? 'white' : '#8c2e2e'}}'></box-icon>
     <p class="text-sm">Profile</p>
 </a>

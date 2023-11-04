@@ -1,5 +1,8 @@
 <x-layout>
-    <h2 class="text-2xl font-bold">Submissions for {{$role->name}}</h2>
+    <div class="flex flex-col gap-1">
+        <a href="{{route('panel-members.index')}}" class="underline w-fit">Back to Panel Members</a>
+        <x-page-title>Submissions for {{$role->name}}</x-page-title>
+    </div>
 
     <div class="flex flex-col gap-3">
         <a href="{{route('panel-members.submissions.create', ['role' => $role, 'type' => 'file'])}}" class="self-end button default">Submit File</a>

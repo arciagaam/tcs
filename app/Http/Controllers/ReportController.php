@@ -21,14 +21,12 @@ class ReportController extends Controller
             $studentIds = TeacherStudent::whereIn('teacher_id', $teacherIds)->get()->map(fn($value) => $value->student_id);
             $groupCodes = Student::whereIn('id', $studentIds)->get()->map(fn($value) => $value->group_code);
 
-            $reports = Report::whereIn('group_code', $groupCodes)->paginate(10);
+            $pendingReports = Report::whereIn('group_code', $groupCodes)->where('status', 1)->paginate(10);
+            $reportsList = Report::whereIn('group_code', $groupCodes)->where('status', '!=', 1)->paginate(10);
         } else {
-            $reports = Report::paginate(10);
+            $pendingReports = Report::where('status', 1)->paginate(10);
+            $reportsList = Report::where('status', '!=', 1)->paginate(10);
         }
-
-
-        $pendingReports = collect($reports->items())->filter(fn ($value) => $value->status == 1);
-        $reportsList = collect($reports->items())->filter(fn ($value) => $value->status != 1);
 
         return view('pages.reports.index', compact('pendingReports', 'reportsList'));
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TeacherStoreRequest;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -13,11 +14,10 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        $teachers = User::with(['roles' => function($query) {
-            $query->whereIn('roles.id', [2,3,4]);
-        }])->get()->filter(function($value) {
-            return count($value->roles) > 0;
-        });
+        
+        $teachers = User::whereHas('roles', function($q){
+            $q->whereIn('roles.id', [2,3,4]);
+        })->paginate(20);
 
         return view('pages.teachers.index', compact('teachers'));
     }
@@ -36,7 +36,7 @@ class TeacherController extends Controller
     public function store(TeacherStoreRequest $request)
     {
         $user = User::create($request->safe()->except('confirm_password', 'roles'));
-        $roleIds = collect($request->validated('roles'))->map(fn($value) => $value);
+        $roleIds = collect($request->validated('roles'))->map(fn ($value) => $value);
         $user->roles()->attach($roleIds);
 
         return redirect()->route('teachers.index');

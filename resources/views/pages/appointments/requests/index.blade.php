@@ -1,5 +1,8 @@
 <x-layout>
-    <x-page-title>Appointment Requests</x-page-title>
+    <div class="flex flex-col gap-1">
+        <a href="{{route('appointments.index')}}" class="underline w-fit">Back to Appointments</a>
+        <x-page-title>Appointment Requests</x-page-title>
+    </div>
 
     <div class="flex flex-col bg-white rounded-lg shadow-sm gap-5 p-5">
         <h2 class="text-lg font-medium">
@@ -62,7 +65,7 @@
             </x-table.main>
         </div>
         <div class="flex">
-            {{-- {{$users->links()}} --}}
+            {{$pendingAppointments->links()}}
         </div>
     </div>
 
@@ -111,7 +114,7 @@
             </x-table.main>
         </div>
         <div class="flex">
-            {{-- {{$users->links()}} --}}
+            {{$appointmentsList->links()}}
         </div>
     </div>
 </x-layout>
