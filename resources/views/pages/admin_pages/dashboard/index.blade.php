@@ -45,7 +45,9 @@
                             <x-table.data>{{$pendingFile->student->user->first_name}} {{$pendingFile->student->user->middle_name ?? ''}} {{$pendingFile->student->user->last_name}}</x-table.data> 
                             <x-table.data>{{formatYearSection($pendingFile->student)}}</x-table.data>
                             <x-table.data>{{$pendingFile->toRoleId->name}}</x-table.data>
-                            <x-table.data>{{$pendingFile->path}}</x-table.data>
+                            <x-table.data>
+                                <a class="underline" href="{{asset('storage/'.$pendingFile->path)}}" download="{{$pendingFile->toRoleId->name}} ISO Form - {{formatName($pendingFile->student->user)}}">Click here to view ISO Form</a>
+                            </x-table.data>
                             <x-table.data>
                                 <div class="flex gap-2">
                                     <form action="{{route('dashboard.update', ['studentFile' => $pendingFile])}}" method="POST">

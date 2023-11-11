@@ -23,11 +23,28 @@ class AppointmentController extends Controller
      */
     public function index()
     {
-        $appointment = Appointment::paginate(10);
+        $teacherIds = UserRole::where('user_id', auth()->user()->id)->get()->map(fn($value) => $value->id);
+
+        $appointment = Appointment::whereIn('user_role_id', $teacherIds)->paginate(10);
+        
         $pendingAppointments = collect($appointment->items())->filter(fn($value) => $value->status == 1);
         $appointmentsList = collect($appointment->items())->filter(fn($value) => $value->status != 1);
+        $panels = null;
 
-        return view('pages.appointments.index', compact('pendingAppointments', 'appointmentsList'));
+        if(checkRole(auth()->user(), [5])) {
+            $student = auth()->user()->student;
+            $ta = $student->files->filter(fn($value) => ($value->status == 2 && $value->to_role_id == 2))->values()->first();
+            $te = $student->files->filter(fn($value) => ($value->status == 2 && $value->to_role_id == 3))->values()->first();
+            $se = $student->files->filter(fn($value) => ($value->status == 2 && $value->to_role_id == 4))->values()->first();
+            
+            $ta = UserRole::where('user_id', $ta->to_user_id ?? null)->where('role_id', $ta->to_role_id ?? null)->with('user')->first() ?? null;
+            $te = UserRole::where('user_id', $te->to_user_id ?? null)->where('role_id', $te->to_role_id ?? null)->with('user')->first() ?? null;
+            $se = UserRole::where('user_id', $se->to_user_id ?? null)->where('role_id', $se->to_role_id ?? null)->with('user')->first() ?? null;
+            
+            $panels = ['Thesis Adviser' => $ta, 'Technical Editor' => $te, 'System Expert' => $se];
+        }
+
+        return view('pages.appointments.index', compact('pendingAppointments', 'appointmentsList', 'panels'));
     }
 
     /**
@@ -45,6 +62,10 @@ class AppointmentController extends Controller
     {
         $roles = auth()->user()->roles;
 
+        if(checkRole(auth()->user(), [5]) && !$request->validated('panel')) {
+            return back()->with('toastData', ['status' => 'error', 'message' => "Select a panel"]);
+        }
+
         if($request->validated('document')) {
             $name = $request->validated('document')->getClientOriginalName();
             $storedFile = $request->validated('document')->storeAs("files", $name, 'public');
@@ -52,8 +73,9 @@ class AppointmentController extends Controller
 
         Appointment::create(['user_id' => auth()->user()->id, 
         'document_path' => $storedFile ?? null,
-        'status' => $roles->contains(fn($value) => $value->id < 5) ? 2 : 1, 
-        ...$request->validated()]);
+        'status' => $roles->contains(fn($value) => $value->id < 5) ? 2 : 1,
+        'user_role_id' => $request->validated('panel'), 
+        ...$request->safe()->except('panel')]);
 
         $students = Student::where('group_code', $request->validated('group_code'))->get();
 
@@ -87,7 +109,7 @@ class AppointmentController extends Controller
 
         }
 
-        return redirect()->route('appointments.index');
+        return redirect()->route('appointments.index')->with('toastData', ['status' => 'success', 'message' => "Appointment created!"]);
     }
 
     /**
@@ -131,7 +153,7 @@ class AppointmentController extends Controller
                 $studentIds = TeacherStudent::whereIn('teacher_id', $teacherIds)->get()->map(fn($value) => $value->student_id);
                 $groupCodes = Student::whereIn('id', $studentIds)->get()->map(fn($value) => $value->group_code);
 
-                $appointments = Appointment::where('status', 2)->whereIn('group_code', $groupCodes)->get();
+                $appointments = Appointment::where('status', 2)->whereIn('group_code', $groupCodes)->whereIn('user_role_id', $teacherIds)->get();
             } else {
                 $appointments = Appointment::where('status', 2)->where('group_code', auth()->user()->student->group_code)->get();
             }

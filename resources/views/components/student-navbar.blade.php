@@ -22,3 +22,8 @@
     <box-icon name='report' type='solid' color='{{request()->is('reports*') ? 'white' : '#8c2e2e'}}'></box-icon>
     <p class="text-sm">Reports</p>
 </a>
+
+<a href="{{ route('chatbot.index') }}" class="nav-item {{request()->is('chatbot*') ? 'hover:bg-primary-800 bg-primary-900 text-white fill-white' : ''}}">
+    <box-icon name='message-dots' type='solid' color='{{request()->is('chatbot*') ? 'white' : '#8c2e2e'}}'></box-icon>
+    <p class="text-sm">Chatbot</p>
+</a>

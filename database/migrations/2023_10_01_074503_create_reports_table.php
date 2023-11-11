@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
             $table->string('group_code');
+            $table->foreignId('user_role_id')->nullable()->constrained('user_roles');
             $table->string('name');
             $table->string('email');
             $table->string('title');

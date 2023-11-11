@@ -11,7 +11,7 @@
     @vite('resources/js/app.js')
 </head>
 <body class="min-h-screen text-black bg-[#fafafa]">
-
+    <x-toast />
     <x-top-navbar />
     <x-navbar />
     

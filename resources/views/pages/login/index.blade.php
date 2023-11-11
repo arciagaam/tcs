@@ -10,7 +10,7 @@
     
 </head>
 <body class="w-full h-screen">
-
+    <x-toast></x-toast>
     <div class="flex items-center justify-center w-full h-full">
 
         <div class="flex items-center justify-center w-1/2 h-full bg-primary-800">

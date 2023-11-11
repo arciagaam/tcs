@@ -5,6 +5,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AppointmentRequestController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\ConversationMessageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\PanelMemberController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\UserController;
 use App\Models\Appointment;
+use App\Models\ConversationMessage;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -78,6 +80,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('tracking', TrackingController::class);
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    Route::prefix('chatbot')->name('chatbot.')->group(function () {
+        Route::post('/send', [ConversationMessageController::class, 'sendMessage'])->name('send');
+    });
+    Route::resource('chatbot', ChatbotController::class);
 });
 
 // Accessible routes when logged in as an admin
@@ -85,11 +92,6 @@ Route::middleware(['auth', 'isAdmin'])->group(function() {
     Route::resource('users', UserController::class);
     Route::resource('students', StudentController::class);
     Route::resource('teachers', TeacherController::class);
-});
-
-// Accessible routes when logged in as an admin or as a student
-Route::middleware(['auth', 'isAdmin', 'isStudent'])->group(function() {
-    Route::resource('chatbot', ChatbotController::class);
 });
 
 // Accessible routes when logged in as a faculty

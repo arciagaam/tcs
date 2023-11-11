@@ -15,6 +15,22 @@
                 @enderror
             </div>
             <div class="input-group">
+                <label for="panel" class="label">Panel</label>
+                <select name="panel" id="panel" class="input">
+                    @foreach ($panels as $role => $panel)
+                        @if (!$panel)
+                            @continue
+                        @endif
+                        <option value="{{$panel->id}}">{{$role}} - {{formatName($panel->user)}}</option>
+                    @endforeach
+                </select>
+               
+                @error('panel')
+                    <p class="self-end text-xs text-red-400">{{$message}}</p>
+                @enderror
+            </div>
+            
+            <div class="input-group">
                 <label for="date" class="label">Date</label>
                 <input type="date" id="date" name="date" placeholder="Enter Date of Report" class="input">
                 @error('email')

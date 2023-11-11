@@ -21,14 +21,29 @@ class ReportController extends Controller
             $studentIds = TeacherStudent::whereIn('teacher_id', $teacherIds)->get()->map(fn($value) => $value->student_id);
             $groupCodes = Student::whereIn('id', $studentIds)->get()->map(fn($value) => $value->group_code);
 
-            $pendingReports = Report::whereIn('group_code', $groupCodes)->where('status', 1)->paginate(10);
-            $reportsList = Report::whereIn('group_code', $groupCodes)->where('status', '!=', 1)->paginate(10);
+            $pendingReports = Report::whereIn('group_code', $groupCodes)->whereIn('user_role_id', $teacherIds)->where('status', 1)->paginate(10);
+            $reportsList = Report::whereIn('group_code', $groupCodes)->whereIn('user_role_id', $teacherIds)->where('status', '!=', 1)->paginate(10);
         } else {
             $pendingReports = Report::where('status', 1)->paginate(10);
             $reportsList = Report::where('status', '!=', 1)->paginate(10);
         }
 
-        return view('pages.reports.index', compact('pendingReports', 'reportsList'));
+        $panels = null;
+
+        if(checkRole(auth()->user(), [5])) {
+            $student = auth()->user()->student;
+            $ta = $student->files->filter(fn($value) => ($value->status == 2 && $value->to_role_id == 2))->values()->first();
+            $te = $student->files->filter(fn($value) => ($value->status == 2 && $value->to_role_id == 3))->values()->first();
+            $se = $student->files->filter(fn($value) => ($value->status == 2 && $value->to_role_id == 4))->values()->first();
+            
+            $ta = UserRole::where('user_id', $ta->to_user_id ?? null)->where('role_id', $ta->to_role_id ?? null)->with('user')->first() ?? null;
+            $te = UserRole::where('user_id', $te->to_user_id ?? null)->where('role_id', $te->to_role_id ?? null)->with('user')->first() ?? null;
+            $se = UserRole::where('user_id', $se->to_user_id ?? null)->where('role_id', $se->to_role_id ?? null)->with('user')->first() ?? null;
+            
+            $panels = ['Thesis Adviser' => $ta, 'Technical Editor' => $te, 'System Expert' => $se];
+        }
+
+        return view('pages.reports.index', compact('pendingReports', 'reportsList', 'panels'));
     }
 
     /**
@@ -44,6 +59,9 @@ class ReportController extends Controller
      */
     public function store(ReportStoreRequest $request)
     {
+        if(checkRole(auth()->user(), [5]) && !$request->validated('panel')) {
+            return back()->with('toastData', ['status' => 'error', 'message' => "Select a panel"]);
+        }
 
         if ($request->validated('document')) {
             $name = $request->validated('document')->getClientOriginalName();
@@ -53,10 +71,11 @@ class ReportController extends Controller
         Report::create([
             'document_path' => $storedFile ?? null,
             'status' => 1,
+            'user_role_id' => $request->validated('panel'),
             ...$request->validated()
         ]);
 
-        return redirect()->route('reports.index');
+        return redirect()->route('reports.index')->with('toastData', ['status' => 'success', 'message' => "Report submitted"]);;
     }
 
     /**

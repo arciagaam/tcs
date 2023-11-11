@@ -12,6 +12,7 @@ class Report extends Model
 
     protected $fillable = [
         'group_code',
+        'user_role_id',
         'user_id',
         'name',
         'email',

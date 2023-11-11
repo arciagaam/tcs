@@ -11,24 +11,34 @@
     <div class="grid grid-cols-3 gap-3 card">
 
         @if($ta)
-            <a href="{{route('panel-members.submissions.index', ['role' => 2])}}" class="flex flex-col items-center justify-center p-2 min-h-[10rem] transition-all border rounded-lg hover:text-white hover:bg-primary-800">
-                <h2>Thesis Adviser</h2>
-                <p>{{formatName($ta)}}</p>
-            </a>
+            <div class="relative !bg-no-repeat !bg-contain !bg-center" style='background: url({{asset("images/thesis-adviser.jpg")}})'>
+                <a href="{{route('panel-members.submissions.index', ['role' => 2])}}" class="!bg-no-repeat !bg-contain !bg-center flex items-center justify-center p-2 border rounded-lg min-h-[10rem] bg-blue-950/50 hover:brightness-125 text-white font-bold text-xl transition-all">
+                    <h2>Thesis Adviser</h2>
+                </a>
+
+                <p class="absolute bottom-2 left-5 text-white font-medium text-sm">{{formatName($ta)}}</p>
+            </div>
+
         @endif
 
         @if ($te)
-            <a href="{{route('panel-members.submissions.index', ['role' => 3])}}" class="flex flex-col items-center justify-center p-2 min-h-[10rem] transition-all border rounded-lg hover:text-white hover:bg-primary-800">
-                <h2>Technical Editor</h2>
-                <p>{{formatName($te)}}</p>
-            </a>
+            <div class="relative !bg-no-repeat !bg-contain !bg-center" style='background: url({{asset("images/technical-editor.jpg")}})'>
+                <a href="{{route('panel-members.submissions.index', ['role' => 3])}}" class="!bg-no-repeat !bg-contain !bg-center flex items-center justify-center p-2 border rounded-lg min-h-[10rem] bg-primary-800/60 hover:brightness-125 text-white font-bold text-xl transition-all">
+                    <h2>Technical Editor</h2>
+                </a>
+
+                <p class="absolute bottom-2 left-5 text-white font-medium text-sm">{{formatName($te)}}</p>
+            </div>
         @endif
 
         @if ($se)
-            <a href="{{route('panel-members.submissions.index', ['role' => 4])}}" class="flex flex-col items-center justify-center p-2 min-h-[10rem] transition-all border rounded-lg hover:text-white hover:bg-primary-800">
-                <h2>System Expert</h2>
-                <p>{{formatName($se)}}</p>
-            </a>
+            <div class="relative !bg-no-repeat !bg-contain !bg-center" style='background: url({{asset("images/system-expert.jpg")}})'>
+                <a href="{{route('panel-members.submissions.index', ['role' => 4])}}" class="!bg-no-repeat !bg-contain !bg-center flex items-center justify-center p-2 border rounded-lg min-h-[10rem] bg-green-950/30 hover:brightness-125 text-white font-bold text-xl transition-all">
+                    <h2>System Expert</h2>
+                </a>
+
+                <p class="absolute bottom-2 left-5 text-white font-medium text-sm">{{formatName($se)}}</p>
+            </div>
         @endif
 
     </div>

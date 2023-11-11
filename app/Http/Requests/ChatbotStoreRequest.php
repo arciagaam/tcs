@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ReportStoreRequest extends FormRequest
+class ChatbotStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,14 +22,9 @@ class ReportStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'group_code' => 'required|exists:students,group_code',
-            'panel' => 'nullable',
-            'name' => 'required',
-            'email' => 'required',
-            'title' => 'required',
-            'date' => 'required',
-            'description' => 'nullable',
-            'document' => 'nullable',
+            'welcome' => 'nullable',
+            'waiting' => 'nullable',
+            'cancel' => 'nullable',
         ];
     }
 }

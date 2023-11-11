@@ -13,6 +13,7 @@ class Appointment extends Model
     protected $fillable = [
         'group_code',
         'user_id',
+        'user_role_id',
         'consultation_name',
         'name',
         'email',

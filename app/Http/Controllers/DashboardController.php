@@ -20,8 +20,8 @@ class DashboardController extends Controller
 
         $studentCount = count($studentIds);
         $groupCount = count($groupCodes);
-        $appointmentCount = Appointment::whereIn('group_code', $groupCodes)->count();
-        $reportCount = Report::whereIn('group_code', $groupCodes)->count();
+        $appointmentCount = Appointment::whereIn('user_role_id', $teacherIds)->whereIn('group_code', $groupCodes)->count();
+        $reportCount = Report::whereIn('user_role_id', $teacherIds)->whereIn('group_code', $groupCodes)->count();
 
         $pendingRegistrations = StudentFile::with(['student.user', 'toUserId', 'toRoleId'])
         ->whereIn('to_role_id', getUserRoleIds())
@@ -39,11 +39,11 @@ class DashboardController extends Controller
             $teacherId = UserRole::where('user_id', $studentFile->to_user_id)->where('role_id', $studentFile->to_role_id)->first();
             $teacherId->handledStudents()->attach([$studentFile->student_id]);
         }
-
         if($request->verdict != 1) {
             $studentFile->delete();
         }
 
-        return back();
+        $name = formatName($studentFile->student->user);
+        return back()->with('toastData', ['status' => 'success', 'message' => "Student $name approved"]);
     }
 }

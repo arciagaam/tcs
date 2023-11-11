@@ -69,6 +69,22 @@
                             <p class="self-end text-xs text-red-400">{{$message}}</p>
                         @enderror
                     </div>
+                
+                    <div class="input-group">
+                        <label for="panel" class="label">Panel</label>
+                        <select name="panel" id="panel" class="input">
+                            @foreach ($panels as $role => $panel)
+                                @if (!$panel)
+                                    @continue
+                                @endif
+                                <option value="{{$panel->id}}">{{$role}} - {{formatName($panel->user)}}</option>
+                            @endforeach
+                        </select>
+                       
+                        @error('group_code')
+                            <p class="self-end text-xs text-red-400">{{$message}}</p>
+                        @enderror
+                    </div>
                     <div class="input-group">
                         <label for="name" class="label">Name</label>
                         <input type="text" id="name" name="name" placeholder="Enter consultation name" class="input" value="{{old('name')}}">

@@ -3,7 +3,7 @@
 function formatName($holder) : string {
     if(!$holder) return '';
 
-    return "$holder->first_name " . ($holder->middle_name ?? '') . " $holder->last_name";
+    return "$holder->first_name " . ($holder->middle_name ? $holder->middle_name . ' ' : '') . "$holder->last_name";
 }
 function formatYearSection($holder) : string {
     return "$holder->year - $holder->section";
@@ -40,4 +40,8 @@ function getUserGroupCodes() {
 
 function getUserRoleIds() {
     return auth()->user()->roles->map(fn($value) => $value->id);
+}
+
+function convertToKebabCase($string) {
+    return str_replace(' ', '-', strtolower($string)); 
 }

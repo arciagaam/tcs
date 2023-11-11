@@ -7,6 +7,15 @@ module.exports = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        toast : {
+          '0%, 100%' : {opacity:0, transform: 'translateY(-2rem)'},
+          '25%, 75%' : {opacity:1, transform: 'translateY(0rem)'},
+        }
+      },
+      animation: {
+        toast: 'toast 3.5s ease-in-out forwards'
+      },
       colors: {
         primary: {
           '50': '#fcf4f4',
