@@ -7,7 +7,7 @@
     <div class="flex flex-col bg-white p-5 rounded-lg shadow-sm gap-5">
 
         <div class="flex justify-end">
-            <x-table.search />
+            {{-- <x-table.search /> --}}
         </div>
 
         <x-table.main class="w-full table-auto">

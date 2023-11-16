@@ -90,7 +90,7 @@
         <h2 class="text-lg font-medium">Teachers List</h2>
 
         <div class="flex justify-end">
-            <x-table.search />
+            {{-- <x-table.search /> --}}
         </div>
         <div class="flex">
             <x-table.main class="w-full table-auto">

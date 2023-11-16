@@ -120,6 +120,21 @@
                             <p class="self-end text-xs text-red-400">{{$message}}</p>
                         @enderror
                     </div>
+
+                    <div class="input-group">
+                        <p class="label">Upload Video</p>
+            
+                        <label for="document" class="bg-white flex items-center justify-center px-4 py-2 text-base border rounded-full cursor-pointer h-fit">
+                            <div class="flex gap-2 whitespace-nowrap">
+                                <box-icon name='upload'></box-icon>
+                                <p>Upload Video</p>
+                            </div>
+                            <input id="document" name="document" type="file" class="opacity-0 max-h-0 max-w-0">
+                        </label>
+                        @error('document')
+                            <p class="self-end text-xs text-red-400">{{$message}}</p>
+                        @enderror
+                    </div>
                     <div class="input-group">
                         <label for="start_date" class="label">Start Date</label>
                         <input type="datetime-local" id="start_date" name="start_date" placeholder="Enter your last name" class="input" value="{{old('start_date')}}">

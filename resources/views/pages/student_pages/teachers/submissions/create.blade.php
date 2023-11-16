@@ -5,7 +5,7 @@
 <x-layout>
     <h2 class="text-2xl font-bold">Submit File/Video</h2>
 
-    <form action="{{route('panel-members.submissions.store', ['role' => $role])}}" method="POST" enctype="multipart/form-data">
+    <form class="card" action="{{route('panel-members.submissions.store', ['role' => $role])}}" method="POST" enctype="multipart/form-data">
         @csrf
         <input name="type" type="hidden" value="{{request()->type}}">
 

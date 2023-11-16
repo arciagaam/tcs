@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AppointmentStoreRequest extends FormRequest
+class UploadGanttChartRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,17 +22,7 @@ class AppointmentStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'group_code' => 'required|exists:students,group_code',
-            'panel' => 'nullable',
-            'name' => 'nullable',
-            'email' => 'nullable',
-            'title' => 'nullable',
-            'description' => 'nullable',
-            'document' => 'nullable',
-            'video' => 'nullable',
-            'consultation_name' => 'nullable',
-            'start_date' => 'required',
-            'end_date' => 'required',
+            'gantt_chart_image_path' => 'required'
         ];
     }
 }

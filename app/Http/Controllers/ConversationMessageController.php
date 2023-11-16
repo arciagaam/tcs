@@ -22,7 +22,7 @@ class ConversationMessageController extends Controller
         ]);
 
         // create logic here to get the response
-        $sampleResponse = "Sample Response";
+        $sampleResponse = "No available data";
 
         $conversation->messages()->create([
             'sender_user_id' => null,

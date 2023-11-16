@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->string('document_path')->nullable();
+            $table->string('video_path')->nullable();
             $table->text('remarks')->nullable();
             $table->dateTime('start_date');
             $table->dateTime('end_date');

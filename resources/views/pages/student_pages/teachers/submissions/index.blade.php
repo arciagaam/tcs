@@ -16,7 +16,7 @@
                         <x-table.header>Class</x-table.header>
                         <x-table.header>Date</x-table.header>
                         <x-table.header>Group Code</x-table.header>
-                        <x-table.header></x-table.header>
+                        <x-table.header>Actions</x-table.header>
                     </x-table.row>
                 </x-table.head>
     
@@ -27,7 +27,13 @@
                             <x-table.data>{{$file->file_name}}</x-table.data>
                             <x-table.data>{{$file->created_at->format('Y-m-d h:m')}}</x-table.data>
                             <x-table.data>{{$file->group_code}}</x-table.data>
-                            <x-table.data></x-table.data>
+                            <x-table.data>
+                                <div class="flex gap-2">
+                                    <a href="{{ route('submission', ['submission' => $file]) }}" class="text-primary-800 button outline ring-primary-800 hover:bg-primary-800 hover:text-white">
+                                        View Submission
+                                    </a>
+                                </div>
+                            </x-table.data>
                         </x-table.row>    
                     @endforeach
                 </x-table.body>
@@ -46,7 +52,7 @@
                         <x-table.header>Class</x-table.header>
                         <x-table.header>Date</x-table.header>
                         <x-table.header>Group Code</x-table.header>
-                        <x-table.header></x-table.header>
+                        <x-table.header>Actions</x-table.header>
                     </x-table.row>
                 </x-table.head>
     
@@ -57,7 +63,13 @@
                         <x-table.data>{{$file->file_name}}</x-table.data>
                         <x-table.data>{{$file->created_at->format('Y-m-d h:m')}}</x-table.data>
                         <x-table.data>{{$file->group_code}}</x-table.data>
-                        <x-table.data></x-table.data>
+                        <x-table.data>
+                            <div class="flex gap-2">
+                                <a href="{{ route('submission', ['submission' => $file]) }}" class="text-primary-800 button outline ring-primary-800 hover:bg-primary-800 hover:text-white">
+                                    View Submission
+                                </a>
+                            </div>
+                        </x-table.data>
                     </x-table.row>    
                 @endforeach
                 </x-table.body>

@@ -71,8 +71,14 @@ class AppointmentController extends Controller
             $storedFile = $request->validated('document')->storeAs("files", $name, 'public');
         }
 
+        if($request->validated('video')) {
+            $videoName = $request->validated('document')->getClientOriginalName();
+            $videoStoredFile = $request->validated('document')->storeAs("files", $videoName, 'public');
+        }
+
         Appointment::create(['user_id' => auth()->user()->id, 
         'document_path' => $storedFile ?? null,
+        'video_path' => $videoStoredFile ?? null,
         'status' => $roles->contains(fn($value) => $value->id < 5) ? 2 : 1,
         'user_role_id' => $request->validated('panel'), 
         ...$request->safe()->except('panel')]);

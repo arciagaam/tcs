@@ -1,4 +1,4 @@
-const fileUploads = document.querySelectorAll('input[type=file]');
+const fileUploads = document.querySelectorAll(['input[type=file]', 'input[type=image]']);
 
 fileUploads.forEach(fileUpload => {
     fileUpload.addEventListener('change', () => {
