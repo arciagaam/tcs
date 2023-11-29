@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Conversation;
 use App\Models\ConversationMessage;
 use Illuminate\Http\Request;
+use \Questions;
 
 class ConversationMessageController extends Controller
 {
@@ -22,15 +23,20 @@ class ConversationMessageController extends Controller
         ]);
 
         // create logic here to get the response
-        $sampleResponse = "No available data";
+        $questions = getChatBotData();
+        if(array_key_exists($request->message, $questions)) {
+            $response = $questions[$request->message];
+        }else{
+            $response = "I'm sorry I cannot answer this question.";
+        }
 
         $conversation->messages()->create([
             'sender_user_id' => null,
-            'message' => $sampleResponse
+            'message' => $response
         ]);
 
         return response()->json([
-            'message' => $sampleResponse,
+            'message' => $response,
             'senderUserId' => null,
             'conversationId' => $conversation->id
         ], 200);

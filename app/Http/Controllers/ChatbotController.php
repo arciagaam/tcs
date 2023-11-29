@@ -32,10 +32,17 @@ class ChatbotController extends Controller
             return view('pages.chatbot.index', compact('settings'));
         } else {
 
+            $chatBotData = getChatBotData();
+            $prompts = [];
+
+            foreach($chatBotData as $key => $value) {
+                array_push($prompts, $key);
+            }
+
             $conversation = Conversation::whereHas('messages', function($q) {
                 $q->oldest();
             })->where('user_id', $user->id)->first();
-            return view('pages.chatbot.index', compact('conversation'));
+            return view('pages.chatbot.index', compact('conversation', 'prompts'));
         }
 
     }

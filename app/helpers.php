@@ -1,4 +1,5 @@
 <?php
+use App\Questions;
 
 function formatName($holder) : string {
     if(!$holder) return '';
@@ -44,4 +45,9 @@ function getUserRoleIds() {
 
 function convertToKebabCase($string) {
     return str_replace(' ', '-', strtolower($string)); 
+}
+
+function getChatBotData() {
+    $q = new Questions;
+    return $q->getData();
 }
