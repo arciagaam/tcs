@@ -66,7 +66,7 @@
                     </div>
                     <div class="flex gap-2">
                         <input type="checkbox" id="cb_te" name="roles[]" value="3">
-                        <label for="cb_te" >Thesis Adviser</label>
+                        <label for="cb_te" >Technical Editor</label>
                     </div>
                     <div class="flex gap-2">
                         <input type="checkbox" id="cb_se" name="roles[]" value="4">
