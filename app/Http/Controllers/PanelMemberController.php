@@ -23,7 +23,7 @@ class PanelMemberController extends Controller
         $te = User::find($te->to_user_id ?? 0) ?? null;
         $se = User::find($se->to_user_id ?? 0) ?? null;
         
-        session('panel_users', [1 => $ta->id ?? null, 2 => $te->id ?? null, 3 => $se->id ?? null]);
+        session(['panel_users' => [1 => $ta->id ?? null, 2 => $te->id ?? null, 3 => $se->id ?? null]]);
         return view('pages.student_pages.teachers.index', compact('ta', 'te', 'se'));
     }
 

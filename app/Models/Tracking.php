@@ -13,6 +13,7 @@ class Tracking extends Model
 
     protected $fillable = [
         'student_submission_id',
+        'to_user_id',
         'group_code',
         'number',
         'name',

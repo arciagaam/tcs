@@ -56,7 +56,7 @@ class StudentSubmissionController extends Controller
         $panelUsers = session('panel_users');
         Tracking::create([
             'student_submission_id' => $submission->id,
-            'to_user_id' => $panelUsers[$role] ?? null,
+            'to_user_id' => $panelUsers[$role->id] ?? null,
             'group_code' => $group_code,
             'number' => $count+1,
             'name' => $request->validated('name'),
