@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('student_submission_id');
             $table->string('group_code');
+            $table->string('to_user_id')->nullable();
             $table->string('number');
             $table->string('name');
             $table->string('file_name');

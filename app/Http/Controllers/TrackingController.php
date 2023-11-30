@@ -19,8 +19,8 @@ class TrackingController extends Controller
             $teacherIds = UserRole::where('user_id', auth()->user()->id)->get()->map(fn($value) => $value->id);
             $studentIds = TeacherStudent::whereIn('teacher_id', $teacherIds)->get()->map(fn($value) => $value->student_id);
             $groupCodes = Student::whereIn('id', $studentIds)->get()->map(fn($value) => $value->group_code);
-
-            $trackings = Tracking::latest()->whereIn('group_code', $groupCodes)->paginate(10);
+            
+            $trackings = Tracking::latest()->whereIn('group_code', $groupCodes)->where('to_user_id', auth()->user()->id)->paginate(10);
         } else {
             $trackings = Tracking::latest()->paginate(10);
         }

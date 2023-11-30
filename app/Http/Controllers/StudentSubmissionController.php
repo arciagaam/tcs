@@ -53,9 +53,10 @@ class StudentSubmissionController extends Controller
         ]);
 
         $count = Tracking::where('group_code', $group_code)->latest()->first()->number ?? 0;
-
+        $panelUsers = session('panel_users');
         Tracking::create([
             'student_submission_id' => $submission->id,
+            'to_user_id' => $panelUsers[$role] ?? null,
             'group_code' => $group_code,
             'number' => $count+1,
             'name' => $request->validated('name'),

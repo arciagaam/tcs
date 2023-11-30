@@ -18,11 +18,12 @@ class PanelMemberController extends Controller
         $ta = $student->files->filter(fn($value) => ($value->status == 2 && $value->to_role_id == 2))->values()->first();
         $te = $student->files->filter(fn($value) => ($value->status == 2 && $value->to_role_id == 3))->values()->first();
         $se = $student->files->filter(fn($value) => ($value->status == 2 && $value->to_role_id == 4))->values()->first();
-
+        
         $ta = User::find($ta->to_user_id ?? 0) ?? null;
         $te = User::find($te->to_user_id ?? 0) ?? null;
         $se = User::find($se->to_user_id ?? 0) ?? null;
-
+        
+        session('panel_users', [1 => $ta->id ?? null, 2 => $te->id ?? null, 3 => $se->id ?? null]);
         return view('pages.student_pages.teachers.index', compact('ta', 'te', 'se'));
     }
 
