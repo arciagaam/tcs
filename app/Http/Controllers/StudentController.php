@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UploadGanttChartRequest;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -14,7 +13,9 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $students = Student::with(['user'])->paginate(20);
+        $students = Student::whereHas('user', function($q) {
+            $q->withoutTrashed();
+        })->paginate();
 
         if(checkRole(auth()->user(), [1])) {
 
@@ -73,8 +74,9 @@ class StudentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Student $student)
     {
-        //
+        $student->user->delete();
+        return back()->with('toastData', ['status' => 'success', 'message' => "Student successfully deleted"]);
     }
 }
