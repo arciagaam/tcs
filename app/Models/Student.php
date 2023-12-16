@@ -27,4 +27,8 @@ class Student extends Model
     public function files() : HasMany {
         return $this->hasMany(StudentFile::class);
     }
+
+    public function tasks() : HasMany {
+        return $this->hasMany(Task::class);
+    }
 }

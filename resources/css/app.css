@@ -44,4 +44,9 @@
     .nav-item {
         @apply flex items-center gap-2 px-5 py-3 hover:bg-gray-100 text-black
     }
+
+    /* gantt */
+    /* .nested_task .gantt_add{
+        @apply hidden;
+    } */
 }

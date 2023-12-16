@@ -22,6 +22,7 @@ use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\UserController;
 use App\Models\Appointment;
 use App\Models\ConversationMessage;
+use App\Models\Task;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -85,7 +86,16 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/send', [ConversationMessageController::class, 'sendMessage'])->name('send');
     });
     Route::resource('chatbot', ChatbotController::class);
+
+    Route::get('/tasks', function () {
+    
+        $result = new Task();
+    
+        return response()->json(['tasks' => $result->all()], 200);
+    });
 });
+
+
 
 // Accessible routes when logged in as an admin
 Route::middleware(['auth', 'isAdmin'])->group(function() {

@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StudentSubmissionStoreRequest;
 use App\Models\Role;
 use App\Models\StudentSubmission;
+use App\Models\Task;
 use App\Models\Tracking;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class StudentSubmissionController extends Controller
@@ -50,6 +52,13 @@ class StudentSubmissionController extends Controller
             'file_name' => $name ?? null,
             'path' => $storedFile ?? null,
             ...$request->safe()->only('name')
+        ]);
+       
+        $task = Task::create([
+            'student_id' => auth()->user()->student->id,
+            'task' => $request->validated('name'),
+            'start_date' => now()->format('Y-m-d'),
+            'end_date' => now()->format('Y-m-d 23:59:59')
         ]);
 
         $count = Tracking::where('group_code', $group_code)->latest()->first()->number ?? 0;
