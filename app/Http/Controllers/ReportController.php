@@ -17,9 +17,9 @@ class ReportController extends Controller
     public function index()
     {
         if (checkRole(auth()->user(), [2, 3, 4])) {
-            $teacherIds = UserRole::where('user_id', auth()->user()->id)->get()->map(fn($value) => $value->id);
-            $studentIds = TeacherStudent::whereIn('teacher_id', $teacherIds)->get()->map(fn($value) => $value->student_id);
-            $groupCodes = Student::whereIn('id', $studentIds)->get()->map(fn($value) => $value->group_code);
+            $teacherIds = UserRole::where('user_id', auth()->user()->id)->get()->map(fn ($value) => $value->id);
+            $studentIds = TeacherStudent::whereIn('teacher_id', $teacherIds)->get()->map(fn ($value) => $value->student_id);
+            $groupCodes = Student::whereIn('id', $studentIds)->get()->map(fn ($value) => $value->group_code);
 
             $pendingReports = Report::whereIn('group_code', $groupCodes)->whereIn('user_role_id', $teacherIds)->where('status', 1)->paginate(10);
             $reportsList = Report::whereIn('group_code', $groupCodes)->whereIn('user_role_id', $teacherIds)->where('status', '!=', 1)->paginate(10);
@@ -30,16 +30,16 @@ class ReportController extends Controller
 
         $panels = null;
 
-        if(checkRole(auth()->user(), [5])) {
+        if (checkRole(auth()->user(), [5])) {
             $student = auth()->user()->student;
-            $ta = $student->files->filter(fn($value) => ($value->status == 2 && $value->to_role_id == 2))->values()->first();
-            $te = $student->files->filter(fn($value) => ($value->status == 2 && $value->to_role_id == 3))->values()->first();
-            $se = $student->files->filter(fn($value) => ($value->status == 2 && $value->to_role_id == 4))->values()->first();
-            
+            $ta = $student->files->filter(fn ($value) => ($value->status == 2 && $value->to_role_id == 2))->values()->first();
+            $te = $student->files->filter(fn ($value) => ($value->status == 2 && $value->to_role_id == 3))->values()->first();
+            $se = $student->files->filter(fn ($value) => ($value->status == 2 && $value->to_role_id == 4))->values()->first();
+
             $ta = UserRole::where('user_id', $ta->to_user_id ?? null)->where('role_id', $ta->to_role_id ?? null)->with('user')->first() ?? null;
             $te = UserRole::where('user_id', $te->to_user_id ?? null)->where('role_id', $te->to_role_id ?? null)->with('user')->first() ?? null;
             $se = UserRole::where('user_id', $se->to_user_id ?? null)->where('role_id', $se->to_role_id ?? null)->with('user')->first() ?? null;
-            
+
             $panels = ['Thesis Adviser' => $ta, 'Technical Editor' => $te, 'System Expert' => $se];
         }
 
@@ -59,7 +59,7 @@ class ReportController extends Controller
      */
     public function store(ReportStoreRequest $request)
     {
-        if(checkRole(auth()->user(), [5]) && !$request->validated('panel')) {
+        if (checkRole(auth()->user(), [5]) && !$request->validated('panel')) {
             return back()->with('toastData', ['status' => 'error', 'message' => "Select a panel"]);
         }
 
@@ -103,6 +103,17 @@ class ReportController extends Controller
         return back();
     }
 
+    public function print()
+    {
+
+        $teacherIds = UserRole::where('user_id', auth()->user()->id)->get()->map(fn ($value) => $value->id);
+        $studentIds = TeacherStudent::whereIn('teacher_id', $teacherIds)->get()->map(fn ($value) => $value->student_id);
+        $groupCodes = Student::whereIn('id', $studentIds)->get()->map(fn ($value) => $value->group_code);
+
+        $reportsList = Report::whereIn('group_code', $groupCodes)->whereIn('user_role_id', $teacherIds)->where('status', '!=', 1)->paginate(10);
+
+        return view('pages.print.reports', compact('reportsList'));
+    }
     /**
      * Remove the specified resource from storage.
      */
