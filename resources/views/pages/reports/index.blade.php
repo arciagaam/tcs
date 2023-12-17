@@ -152,9 +152,13 @@
         </div>
 
         <div class="card">
-            <h2 class="text-lg font-medium">
-                Reports List
-            </h2>
+            <div class="flex w-full justify-between">
+                <h2 class="text-lg font-medium">
+                    Reports List
+                </h2>
+
+                <a target="_blank" href="{{route('reports.print')}}" class="button default"> Print Reports List</a>
+            </div>
             
             <div class="flex">
                 <x-table.main class="w-full table-auto">

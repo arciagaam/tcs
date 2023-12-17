@@ -66,13 +66,17 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('dashboard', DashboardController::class)->only('index');
 
     Route::prefix('appointments')->name('appointments.')->group(function() {
+
+        Route::get('/requests/print', [AppointmentRequestController::class, 'print'])->name('print');
         Route::resource('requests', AppointmentRequestController::class);
+        
     });
 
     //appointments api
     Route::get('/appointments/get', [AppointmentController::class, 'get']);
     Route::resource('appointments', AppointmentController::class);
 
+    Route::get('reports/print', [ReportController::class, 'print'])->name('reports.print');
     Route::resource('reports', ReportController::class);
 
     Route::get('/submissions/{submission}', [SubmissionController::class, 'show'])->name('submission');
