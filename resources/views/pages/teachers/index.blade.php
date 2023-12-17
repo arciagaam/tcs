@@ -100,7 +100,7 @@
                         <x-table.header>Name</x-table.header>
                         <x-table.header>Email</x-table.header>
                         <x-table.header>Roles</x-table.header>
-                        {{-- <x-table.header>Actions</x-table.header> --}}
+                        <x-table.header>Actions</x-table.header>
                     </x-table.row>
                 </x-table.head>
                 <x-table.body>
@@ -110,15 +110,19 @@
                                 <x-table.data>{{formatName($teacher)}}</x-table.data>
                                 <x-table.data>{{$teacher->email}}</x-table.data>
                                 <x-table.data>{{displayRoles($teacher->roles)}}</x-table.data>
-                                {{-- <x-table.data>
+                                <x-table.data>
                                     <div class="flex gap-2">
-                                        <a href="{{route('users.show', ['user' => $user->id])}}" class="text-primary-800 button button-outline ring-primary-800 hover:bg-primary-800 hover:text-white">View</a>
-                                        @if(checkRole(auth()$teacher(), [1]))
-                                            <a href="{{route('users.edit', ['user' => $user->id])}}" class="text-primary-800 button button-outline ring-primary-800 hover:bg-primary-800 hover:text-white">Edit</a>
-                                            <a href="{{route('users.destroy', ['user' => $user->id])}}" class="text-red-400 button button-outline ring-red-400 hover:bg-red-400 hover:text-white">Delete</a>
+                                        {{-- <a href="{{route('users.show', ['user' => $user->id])}}" class="text-primary-800 button button-outline ring-primary-800 hover:bg-primary-800 hover:text-white">View</a> --}}
+                                        @if(checkRole(auth()->user(), [1]))
+                                            <a href="{{route('teachers.edit', ['teacher' => $teacher->id])}}" class="text-primary-800 button button-outline ring-1 ring-primary-800 hover:bg-primary-800 hover:text-white">Edit</a>
+                                            <form action="{{route('teachers.destroy', ['teacher' => $teacher->id])}}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="text-red-500 button button-outline ring-1 ring-red-500 hover:bg-red-500 hover:text-white cursor-pointer">Delete</button>
+                                            </form>
                                         @endif
                                     </div>
-                                </x-table.data> --}}
+                                </x-table.data>
                             </x-table.row>
                         @endforeach
                     @else

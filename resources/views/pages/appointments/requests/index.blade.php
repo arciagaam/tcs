@@ -70,10 +70,17 @@
     </div>
 
     <div class="flex flex-col bg-white rounded-lg shadow-sm gap-5 p-5">
-        <h2 class="text-lg font-medium">
-            Appointment List
-        </h2>
+
+        <div class="flex w-full justify-between">
+            <h2 class="text-lg font-medium">
+                Appointment List
+            </h2>
+            
+            <a target="_blank" href="{{route('appointments.print')}}" class="button default">Print Appointment List</a>
+        </div>
         
+        
+
         <div class="flex">
             <x-table.main class="w-full table-auto">
                 <x-table.head>

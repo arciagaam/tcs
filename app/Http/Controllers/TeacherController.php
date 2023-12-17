@@ -53,24 +53,28 @@ class TeacherController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(User $teacher)
     {
-        //
+        $teacher = $teacher->where('id', $teacher->id)->with('roles')->first();
+        return view('pages.teachers.edit', compact('teacher'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, User $teacher)
     {
-        //
+        $teacher->update($request->post());
+        return redirect()->route('teachers.edit', ['teacher' => $teacher->id])->with('toastData', ['status' => 'success', 'message' => "Teacher updated!"]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $teacher)
     {
-        //
+        $teacher->delete();
+        return back()->with('toastData', ['status' => 'success', 'message' => "Teacher successfully deleted"]);
+
     }
 }

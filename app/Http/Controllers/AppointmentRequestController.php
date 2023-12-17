@@ -78,6 +78,16 @@ class AppointmentRequestController extends Controller
         return redirect()->route('appointments.requests.index');
     }
 
+    public function print() {
+        $teacherIds = UserRole::where('user_id', auth()->user()->id)->get()->map(fn($value) => $value->id);
+        $studentIds = TeacherStudent::whereIn('teacher_id', $teacherIds)->get()->map(fn($value) => $value->student_id);
+        $groupCodes = Student::whereIn('id', $studentIds)->get()->map(fn($value) => $value->group_code);
+
+        $appointmentsList = Appointment::whereIn('group_code', $groupCodes)->with(['user.student'])->whereIn('user_role_id', $teacherIds)->where('status', '!=', 1)->paginate(10);
+
+        return view('pages.print.appointments', compact('appointmentsList'));
+    }
+
     /**
      * Remove the specified resource from storage.
      */
