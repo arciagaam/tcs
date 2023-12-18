@@ -27,7 +27,7 @@ class VerifyUserMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Verify User Mail',
+            subject: 'Verify User Account',
         );
     }
 
@@ -38,6 +38,7 @@ class VerifyUserMail extends Mailable
     {
         return new Content(
             view: 'view.name',
+            with: []
         );
     }
 

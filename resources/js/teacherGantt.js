@@ -67,18 +67,5 @@ gantt.templates.task_text=function(start, end, task){
 gantt.init("gantt_here");
 // console.log(task)
 
-gantt.load(`api/data/${userId}`);
 
-// fetch(`api/data/${userId}`)
-//   .then(response => {
-//     if (!response.ok) {
-//       throw new Error('Network response was not ok.');
-//     }
-//     return response.json();
-//   })
-//   .then(data => {
-//     console.log('Response data:', data);
-//   })
-//   .catch(error => {
-//     console.error('Fetch error:', error);
-//   });
+gantt.load(`data/${userId}`);

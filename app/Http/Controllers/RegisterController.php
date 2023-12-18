@@ -50,6 +50,6 @@ class RegisterController extends Controller
             ]);
         }
 
-        return redirect()->route('login')->with('toastData', ['status' => 'success', 'message' => "Account registered"]);
+        return redirect()->route('login')->with('toastData', ['status' => 'success', 'message' => "Account registered."]);
     }
 }

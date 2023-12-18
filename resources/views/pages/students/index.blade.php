@@ -25,9 +25,13 @@
                                 <x-table.data>{{$student->user->email}}</x-table.data>
                                 <x-table.data>{{formatYearSection($student)}}</x-table.data>
                                 <x-table.data>
-                                    <div class="flex gap-2">
+                                    <div class="flex flex-row gap-2">
                                         @if(checkRole(auth()->user(), [1]))
                                             {{-- <a href="{{route('users.edit', ['user' => $student->id])}}" class="text-primary-800 button button-outline ring-1 ring-primary-800 hover:bg-primary-800 hover:text-white">Edit</a> --}}
+                                            <form action="{{route('students.show', ['student' => $student])}}" method="GET">
+                                                @csrf
+                                                <button class="text-primary-800 button button-outline ring-1 ring-primary-800 hover:bg-primary-800 hover:text-white cursor-pointer">View</button>
+                                            </form>
                                             <form action="{{route('students.destroy', ['student' => $student])}}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
