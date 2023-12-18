@@ -49,7 +49,56 @@
         </x-table.main>
     </div>
 
+    
+    <x-page-title>Students</x-page-title>
+    
+    <div class="card">
+        <div class="flex justify-end">
+            {{-- <x-table.search /> --}}
+        </div>
+        <div class="flex">
+            <x-table.main class="w-full table-auto">
+                <x-table.head>
+                    <x-table.row class="text-left bg-primary-800">
+                        <x-table.header>Group Code</x-table.header>
+                        <x-table.header>Name</x-table.header>
+                        <x-table.header>Email</x-table.header>
+                        <x-table.header>Year and Section</x-table.header>
+                        <x-table.header>Actions</x-table.header>
+                    </x-table.row>
+                </x-table.head>
+                <x-table.body>
+                    @if (count($studentList))
+                    @foreach ($studentList as $student)
+                    {{-- {{dd($student)}} --}}
+                            <x-table.row class="odd:bg-white even:bg-primary-50">
+                                <x-table.data>{{$student->group_code ?? 'N/A'}}</x-table.data>
+                                <x-table.data>{{formatName($student->user)}}</x-table.data>
+                                <x-table.data>{{$student->user->email}}</x-table.data>
+                                <x-table.data>{{formatYearSection($student)}}</x-table.data>
+                                <x-table.data>
+                                    <div class="flex flex-row gap-2">
+                                        @if(checkRole(auth()->user(), [2,3,4]))
+                                            <a href="{{route('student.show', ['student' => $student])}}" method="GET">
+                                                @csrf
+                                                <button class="text-primary-800 button button-outline ring-1 ring-primary-800 hover:bg-primary-800 hover:text-white cursor-pointer">View</button>
+                                            </a>
+                                        @endif
+                                    </div>
+                                </x-table.data>
+                            </x-table.row>
+                        @endforeach
+                    @else
+                        <x-table-no-data/>
+                    @endif
+                </x-table.body>
+            </x-table.main>
+        </div>
+    </div>
     <div class="flex">
         {{$submissions->links()}}
+    </div>
+    <div class="flex">
+        {{$studentList->links()}}
     </div>
 </x-layout>

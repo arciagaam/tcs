@@ -6,16 +6,14 @@ use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class AdminRoleController extends Controller
+class TeacherStudentsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $roles = auth()->user()->roles;
-
-        return view('pages.admin_pages.students.index', compact('roles'));
+        //
     }
 
     /**
@@ -39,7 +37,13 @@ class AdminRoleController extends Controller
      */
     public function show(Student $student)
     {
+        //
+        $student = DB::table('students')
+        ->join('users', 'users.id', '=', 'students.user_id')
+        ->where('students.user_id', $student->user_id)->get()->first();
+        // dd($student);
         
+        return view('pages.student_list.show', compact('student'));
     }
 
     /**
