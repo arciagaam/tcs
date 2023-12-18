@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
@@ -50,9 +52,13 @@ class StudentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
+    public function show(Student $student)
+    {   
+        $student = DB::table('students')
+        ->join('users', 'users.id', '=', 'students.user_id')
+        ->where('students.user_id', $student->user_id)->get()->first();
+        
+        return view('pages.students.show', compact('student'));
     }
 
     /**

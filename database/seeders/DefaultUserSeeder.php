@@ -19,6 +19,7 @@ class DefaultUserSeeder extends Seeder
             'first_name' => 'saFN',
             'middle_name' => 'saMN',
             'last_name' => 'saLN',
+            'is_verified' => 1,
             'email' => 'superadmin@email.com',
             'password' => bcrypt('password')
         ]);
@@ -29,6 +30,7 @@ class DefaultUserSeeder extends Seeder
             'first_name' => 'adminFN',
             'middle_name' => 'adminMN',
             'last_name' => 'adminLN',
+            'is_verified' => 1,
             'email' => 'admin@email.com',
             'password' => bcrypt('password')
         ]);
@@ -39,6 +41,7 @@ class DefaultUserSeeder extends Seeder
             'first_name' => '2admin',
             'middle_name' => '2adminmn',
             'last_name' => '2adminln',
+            'is_verified' => 1,
             'email' => 'admin2@email.com',
             'password' => bcrypt('password')
         ]);

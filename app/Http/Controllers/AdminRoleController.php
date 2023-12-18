@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdminRoleController extends Controller
 {
@@ -12,7 +14,12 @@ class AdminRoleController extends Controller
     public function index()
     {
         $roles = auth()->user()->roles;
-        return view('pages.admin_pages.students.index', compact('roles'));
+
+        $students = Student::whereHas('user', function($q) {
+            $q->withoutTrashed();
+        })->paginate();
+        
+        return view('pages.admin_pages.students.index', compact(['roles', 'students']));
     }
 
     /**
@@ -36,7 +43,13 @@ class AdminRoleController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $roles = auth()->user()->roles;
+        $student = DB::table('students')
+        ->join('users', 'users.id', '=', 'students.user_id')
+        ->where('students.user_id', $id)->get()->first();
+        // dd($student);
+        
+        return view('pages.admin_pages.students.show', compact(['roles','student']));
     }
 
     /**

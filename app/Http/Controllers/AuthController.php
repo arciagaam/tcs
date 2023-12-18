@@ -13,8 +13,12 @@ class AuthController extends Controller
     }
 
     public function authenticate(AuthenticateRequest $request)
-    {
+    {   
+
         if(auth()->attempt($request->validated())) {
+            if(checkVerification(auth()->user())) {
+                return redirect()->route('login')->with('Account is not verified. Please Check your email and try again.');
+            }
 
             if(checkRole(auth()->user(), [5])) {
                 return redirect()->route('home.index');

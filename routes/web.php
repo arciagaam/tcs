@@ -22,7 +22,9 @@ use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\UserController;
 use App\Models\Appointment;
 use App\Models\ConversationMessage;
+use App\Models\Student;
 use App\Models\Task;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -84,6 +86,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/submissions/{submission}/check', [SubmissionController::class, 'check'])->name('submission.check');
 
     Route::resource('tracking', TrackingController::class);
+
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::prefix('chatbot')->name('chatbot.')->group(function () {
@@ -91,12 +94,16 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::resource('chatbot', ChatbotController::class);
 
-    Route::get('/tasks', function () {
-    
-        $result = new Task();
-    
-        return response()->json(['tasks' => $result->all()], 200);
+    Route::get('students/data/{id}', function ($id) {
+        $tasks = new Task();
+        $student = Student::with('tasks')->where('user_id', $id)->first();
+        $tasks = $student->tasks;
+
+        return response()->json([
+            "data" => $tasks->all()
+        ]);
     });
+    
 });
 
 
@@ -112,6 +119,16 @@ Route::middleware(['auth', 'isAdmin'])->group(function() {
 Route::middleware(['auth', 'isEmployee'])->group(function() {
     Route::put('/dashboard/{studentFile}', [DashboardController::class, 'update'])->name('dashboard.update');
 
+    Route::resource('admin-roles', AdminRoleController::class);
+    Route::get('admin-roles/data/{id}', function ($id) {
+        $tasks = new Task();
+        $student = Student::with('tasks')->where('user_id', $id)->first();
+        $tasks = $student->tasks;
+
+        return response()->json([
+            "data" => $tasks->all()
+        ]);
+    });
     Route::prefix('admin-roles')->name('admin-roles.')->group(function() {
         Route::get('/{role}/students', [StudentListController::class, 'index'])->name('students.index');
     });

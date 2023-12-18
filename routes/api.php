@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GanttController;
 use App\Models\Task;
 
 /*
@@ -25,4 +26,5 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
+Route::get('/data/{id}', [GanttController::class, 'get']);
 
