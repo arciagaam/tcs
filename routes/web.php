@@ -18,6 +18,7 @@ use App\Http\Controllers\StudentListController;
 use App\Http\Controllers\StudentSubmissionController;
 use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\TeacherStudentsController;
 use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\UserController;
 use App\Models\Appointment;
@@ -92,18 +93,19 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('chatbot')->name('chatbot.')->group(function () {
         Route::post('/send', [ConversationMessageController::class, 'sendMessage'])->name('send');
     });
-    Route::resource('chatbot', ChatbotController::class);
+    Route::resource('chatbot', ChatbotController::class);   
 
-    Route::get('students/data/{id}', function ($id) {
+    
+    Route::get('/student/{student}', [TeacherStudentsController::class, 'show'])->name('student.show');
+    Route::get('student/data/{id}', function ($id) {
         $tasks = new Task();
-        $student = Student::with('tasks')->where('user_id', $id)->first();
+        $student = Student::with('tasks')->where('user_id', $id)->get()->first();
         $tasks = $student->tasks;
 
         return response()->json([
             "data" => $tasks->all()
         ]);
-    });
-    
+    }); 
 });
 
 
@@ -113,22 +115,22 @@ Route::middleware(['auth', 'isAdmin'])->group(function() {
     Route::resource('users', UserController::class);
     Route::resource('students', StudentController::class);
     Route::resource('teachers', TeacherController::class);
-});
 
-// Accessible routes when logged in as a faculty
-Route::middleware(['auth', 'isEmployee'])->group(function() {
-    Route::put('/dashboard/{studentFile}', [DashboardController::class, 'update'])->name('dashboard.update');
-
-    Route::resource('admin-roles', AdminRoleController::class);
-    Route::get('admin-roles/data/{id}', function ($id) {
+    Route::get('students/data/{id}', function ($id) {
         $tasks = new Task();
-        $student = Student::with('tasks')->where('user_id', $id)->first();
+        $student = Student::with('tasks')->where('user_id', $id)->get()->first();
         $tasks = $student->tasks;
 
         return response()->json([
             "data" => $tasks->all()
         ]);
-    });
+    }); 
+});
+
+// Accessible routes when logged in as a faculty
+Route::middleware(['auth', 'isEmployee'])->group(function() {
+    Route::put('/dashboard/{studentFile}', [DashboardController::class, 'update'])->name('dashboard.update');
+    
     Route::prefix('admin-roles')->name('admin-roles.')->group(function() {
         Route::get('/{role}/students', [StudentListController::class, 'index'])->name('students.index');
     });

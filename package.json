@@ -21,6 +21,7 @@
         "@fullcalendar/list": "^6.1.9",
         "@fullcalendar/timegrid": "^6.1.9",
         "boxicons": "^2.1.4",
+        "chart.js": "^4.4.1",
         "concurrently": "^8.2.2"
     }
 }
