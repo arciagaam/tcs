@@ -24,7 +24,9 @@ use App\Http\Controllers\UserController;
 use App\Models\Appointment;
 use App\Models\ConversationMessage;
 use App\Models\Student;
+use App\Models\StudentSubmission;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -97,15 +99,27 @@ Route::middleware(['auth'])->group(function () {
 
     
     Route::get('/student/{student}', [TeacherStudentsController::class, 'show'])->name('student.show');
+    // api for gantt chart
     Route::get('student/data/{id}', function ($id) {
         $tasks = new Task();
         $student = Student::with('tasks')->where('user_id', $id)->get()->first();
         $tasks = $student->tasks;
-
+        
         return response()->json([
             "data" => $tasks->all()
-        ]);
+        ], 200);
     }); 
+
+    // api for other charts
+    Route::get('/submissionChart/{submission}', function ($id) {
+        $submissions = DB::table('student_submissions')
+        ->join('students', 'students.id', '=' ,'student_submissions.student_id')
+        ->join('users', 'users.id', '=', 'students.user_id')
+        ->select('student_submissions.created_at')
+        ->where('students.user_id', $id)->get()->all(); 
+        // dd($submissions);
+        return response()->json(["data" => $submissions], 200);
+    });
 });
 
 
