@@ -54,11 +54,9 @@
       const jsonData = await response.json(); // Assuming JSON response
       
       // Handle the fetched data here
-      console.log(jsonData);
       const mappedData = jsonData.data.map(item => ({
         dateOfsubmission: item.created_at,
       }))
-      console.log(mappedData);
 
       const submissionsByDay = mappedData.reduce((accumulator, mappedData) => {
         const date = new Date(mappedData.dateOfsubmission); // Convert string to Date object
@@ -99,8 +97,6 @@
       // Calculate average submissions per month
       const averageSubmissionsPerMonth = Object.values(submissionsByMonth).reduce((sum, count) => sum + count, 0) / Object.keys(submissionsByMonth).length;
       
-      console.log(averageSubmissionsPerWeek);
-
       const submissionCount = {
         Day: averageSubmissionsPerDay,
         Week: averageSubmissionsPerWeek,

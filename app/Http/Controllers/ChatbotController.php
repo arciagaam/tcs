@@ -7,6 +7,7 @@ use App\Http\Requests\ChatbotUpdateRequest;
 use App\Models\ChatBotSetting;
 use App\Models\Conversation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ChatbotController extends Controller
 {
@@ -21,15 +22,23 @@ class ChatbotController extends Controller
         }
 
         if(checkRole($user, [1])) {
-            $settingsObject = [];
-    
-            foreach(ChatBotSetting::get() as $setting) {
-                $messageType = $setting->message_type;
-                $settingsObject[$messageType] = (object) $setting;
+            $chatBotData = getChatBotData();
+            $prompts = [];
+
+            foreach($chatBotData as $key => $value) {
+                array_push($prompts, $key);
             }
             
-            $settings = collect($settingsObject);
-            return view('pages.chatbot.index', compact('settings'));
+            $inbox = DB::table('conversations')
+            ->join('users', 'users.id', 'conversations.user_id')
+            ->where('conversations.user_id', '!=', 1)
+            ->get()->all();
+
+            $conversation = Conversation::whereHas('messages', function($q) {
+                $q->oldest();
+            })->where('user_id', $user->id)->first();
+            return view('pages.chatbot.index', compact('inbox', 'conversation', 'prompts'));
+            
         } else {
 
             $chatBotData = getChatBotData();
@@ -84,10 +93,28 @@ class ChatbotController extends Controller
      */
     public function show(string $id)
     {
-        if(!checkRole(auth()->user(), [1,5])) {
+        if(!checkRole(auth()->user(), [1])) {
             return redirect('/');
         }
+        // dd($chatbot);
 
+        $inbox = DB::table('conversations')
+        ->join('users', 'users.id', 'conversations.user_id')
+        ->where('conversations.user_id', '!=', 1)
+        ->get()->all();
+         
+        $chatBotData = getChatBotData();
+            $prompts = [];
+
+        foreach($chatBotData as $key => $value) {
+            array_push($prompts, $key);
+        }
+
+        $conversation = Conversation::whereHas('messages', function($q) {
+            $q->oldest();
+        })->where('user_id', $id)->first();
+
+        return view('pages.chatbot.show', compact('inbox', 'id', 'conversation'));
         //
     }
 

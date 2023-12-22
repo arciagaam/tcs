@@ -1,13 +1,13 @@
 <x-layout>
-  <div class="flex flex-col mx-20 my-10 gap-5">
+  <div class="flex min-w-full flex-col gap-5 px-10 py-5 lg:px-20 lg:py-10">
     <x-page-title>Gantt Chart Progress</x-page-title>
 
     <div class="flex flex-col w-full h-screen gap-10">
         <div id="gantt_here" class="flex w-full h-1/2"></div>
 
-        <div class="flex flex-row items-center justify-center gap-20">
-            <div class="w-1/4"><canvas id="pie"></canvas></div>
-            <div class="w-1/2"><canvas id="bar"></canvas></div>
+        <div class="flex flex-col justify-center gap-20 lg:flex-row">
+            <div class="flex min-w-[25%]"><canvas id="pie"></canvas></div>
+            <div class="flex min-w-[50%]"><canvas id="bar"></canvas></div>
         </div>
     </div>
   </div>
@@ -28,21 +28,19 @@
       const jsonData = await response.json(); // Assuming JSON response
       
       // Handle the fetched data here
-      console.log(jsonData);
       const mappedData = jsonData.data.map(item => ({
         fileName: item.file_name,
         dateOfsubmission: item.created_at
       }))
-      console.log(mappedData);
 
       const submissionsByDay = mappedData.reduce((accumulator, mappedData) => {
-      const date = new Date(mappedData.dateOfsubmission); // Convert string to Date object
-      const formattedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate()); // Extract only date without time
-      const dateString = formattedDate.toISOString().split('T')[0]; // Format date as 'YYYY-MM-DD'
-      
-      accumulator[dateString] = (accumulator[dateString] || 0) + 1;
-      return accumulator;
-    }, {});
+        const date = new Date(mappedData.dateOfsubmission); // Convert string to Date object
+        const formattedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate()); // Extract only date without time
+        const dateString = formattedDate.toISOString().split('T')[0]; // Format date as 'YYYY-MM-DD'
+        
+        accumulator[dateString] = (accumulator[dateString] || 0) + 1;
+        return accumulator;
+      }, {});
 
       const averageSubmissionsPerDay = Object.values(submissionsByDay).reduce((sum, count) => sum + count, 0) / Object.keys(submissionsByDay).length;
 
@@ -73,8 +71,6 @@
       }, {});
       // Calculate average submissions per month
       const averageSubmissionsPerMonth = Object.values(submissionsByMonth).reduce((sum, count) => sum + count, 0) / Object.keys(submissionsByMonth).length;
-      
-      console.log(averageSubmissionsPerWeek);
 
       const submissionCount = {
         Day: averageSubmissionsPerDay,

@@ -48,11 +48,24 @@ sendButton.addEventListener('click', async () => {
 });
 
 function appendNewMessage(message, role = 'user') {
+    const messageContainer = Object.assign(document.createElement('div'), {
+        className: `flex ${role === 'user' ? 'text-right' : 'justify-start'}`
+    });
+    messages.append(messageContainer);
+
+    if (role != 'user') {
+        const imageContainer = Object.assign(document.createElement('div'), {
+            className: 'flex items-center justify-center bg-blue-950 self-end rounded-full min-w-[40px] min-h-[40px]'
+        });
+
+        messageContainer.append(imageContainer);
+    }
+    
     const newMessage = Object.assign(document.createElement('p'), {
-        className: `py-6 px-4 w-full even:bg-slate-100 ${role === 'user' ? 'text-right' : 'text-left'}`,
+        className: `py-6 ml-5 w-full rounded-xl even:bg-slate-100 ${role != 'user' ? 'px-4' : ''}`,
         innerText: message
     });
 
-    messages.append(newMessage);
+    messageContainer.append(newMessage);
     newMessage.scrollIntoView();
 }
