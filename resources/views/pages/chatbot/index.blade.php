@@ -2,53 +2,37 @@
     <x-page-title>Chatbot</x-page-title>
 
     @if(checkRole(auth()->user(), [1]))
-        <form action="{{route('chatbot.store')}}" method="POST" class="card">
-            @csrf
-            <h2 class="text-lg font-medium">
-                Auto Responder
-            </h2>
-
-            <div class="input-group gap-2">
-                <div class="flex items-center">
-                    <box-icon name='mail-send' ></box-icon>
-                    <label for="welcome" class="label">Welcome Message</label>
-                </div>
-                <input type="text" id="welcome" name="welcome" placeholder="Enter welcome message" class="input" value="{{$settings['welcome']->value ?? ''}}">
-                @error('welcome')
-                    <p class="self-end text-xs text-red-400">{{$message}}</p>
-                @enderror
+        <div class="flex flex-col w-full gap-5 lg:flex-row">
+            <div class="card min-w-[350px] max-h-[70vh] overflow-y-scroll">
+                <h2 class="text-lg font-medium">
+                    Conversations
+                    @if ($inbox)
+                        @foreach ($inbox as $conversations)
+                        {{-- {{dd($conversation->first_name)}} --}}
+                            <a href="{{route('chatbot.show', ['chatbot' => $conversations->id])}}" class="card items gap-2 flex-row items-center my-2 shadow-sm border-gray-300 hover:bg-black/5">
+                                <div class="flex items-center justify-center bg-primary-800 self-start rounded-full min-w-[40px] min-h-[40px]"></div>
+                                <div class="flex flex-col">
+                                    <p>{{$conversations->first_name.' '.$conversations->middle_name.' '.$conversations->last_name}}</p> 
+                                    <p class="text-sm overflow-x-hidden whitespace-nowrap">Recent Message</p> 
+                                </div>
+                            </a>
+                    @endforeach    
+                    @else
+                        <p class="text-sm text-black/50">No conversations.</p>
+                    @endif  
+                </h2>
             </div>
+            <div class="card w-full">
+                <div class="flex flex-col flex-1 ring-1 ring-black/20 rounded-lg overflow-clip">
+                    <div class="flex">
+                        <div id="noConversation" class="flex flex-col flex-1 w-full min-h-[60vh] max-h-[60vh] items-center justify-center">
+                            <p class="text-lg text-black/50">Click a conversation.</p>
+                        </div>
+                    </div>
 
-            <div class="input-group gap-2">
-                <div class="flex items-center">
-                    <box-icon name='hourglass' type='solid' ></box-icon>
-                    <label for="waiting" class="label">Waiting Message</label>
                 </div>
-                <input type="text" id="waiting" name="waiting" placeholder="Enter waiting message" class="input" value="{{$settings['waiting']->value ?? ''}}">
-                @error('waiting')
-                    <p class="self-end text-xs text-red-400">{{$message}}</p>
-                @enderror
             </div>
-
-            <div class="input-group gap-2">
-                <div class="flex items-center">
-                    <box-icon name='x-circle' type='solid' ></box-icon>
-                    <label for="cancel" class="label">Cancel Message</label>
-                </div>
-                <input type="text" id="cancel" name="cancel" placeholder="Enter cancel message" class="input" value="{{$settings['cancel']->value ?? ''}}">
-                @error('cancel')
-                    <p class="self-end text-xs text-red-400">{{$message}}</p>
-                @enderror
-            </div>
-
-            <button class="button default">Save</button>
-        </form>
-
-        {{-- <div class="card">
-            <h2 class="text-lg font-medium">
-                Conversations
-            </h2>
-        </div> --}}
+        </div>
     @endif
 
     @if(checkRole(auth()->user(), [5]))
@@ -57,9 +41,16 @@
             <div class="flex flex-col flex-1 ring-1 ring-black/20 rounded-lg overflow-clip">
                 <div class="flex">
                     @if ($conversation)
-                        <div id="messages" class="flex flex-col w-full mt-auto overflow-y-auto min-h-[60vh] max-h-[60vh]">
+                        <div id="messages" class="flex flex-col w-full mt-auto p-5 overflow-y-auto min-h-[60vh] max-h-[60vh]">
                             @foreach ($conversation->messages as $message)
-                                <p class="py-6 px-4 w-full even:bg-slate-100 {{$message->sender_user_id ? 'text-right' : 'text-left'}}">{{$message->message}}</p>
+                                <div class="flex {{$message->sender_user_id ? 'text-right' : 'justify-start'}}">
+                                    @if(!$message->sender_user_id)
+                                        <div class="flex items-center justify-center bg-blue-950 self-end rounded-full min-w-[40px] min-h-[40px]">
+                                            <img src="" alt="a">
+                                        </div>
+                                    @endif
+                                        <p class="py-6 ml-5 w-full rounded-xl even:bg-slate-100 {{$message->sender_user_id ?? 'px-4'}} ">{{$message->message}}</p>
+                                </div>
                             @endforeach
                         </div>
                     @else

@@ -1,63 +1,130 @@
 <x-layout>
+  <div class="flex min-w-full flex-col gap-5 px-10 py-5 lg:px-20 lg:py-10">
     <x-page-title>Gantt Chart Progress</x-page-title>
 
-    <div class="w-full h-96">
-        <div id="gantt_here" class="flex w-full h-full"></div>
+    <div class="flex flex-col w-full h-screen gap-10">
+        <div id="gantt_here" class="flex w-full h-1/2"></div>
 
-        <div class="flex flex-row">
-            <div class="w-full"><canvas id="pie"></canvas></div>
-            <div class="w-full"><canvas id="bar"></canvas></div>
+        <div class="flex flex-col justify-center gap-20 lg:flex-row">
+            <div class="flex min-w-[25%]"><canvas id="pie"></canvas></div>
+            <div class="flex min-w-[50%]"><canvas id="bar"></canvas></div>
         </div>
     </div>
-    
+  </div>
 </x-layout>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-(async function() {
-  const data = [
-    { year: 2010, count: 10 },
-    { year: 2011, count: 20 },
-    { year: 2012, count: 15 },
-    { year: 2013, count: 25 },
-    { year: 2014, count: 22 },
-    { year: 2015, count: 30 },
-    { year: 2016, count: 28 },
-  ];
+  var userId = {{ auth()->user()->id }};
+  
+  async function fetchData() {
+    try {
+      const response = await fetch(`/submissionChart/${userId}`);
+      
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      
+      const jsonData = await response.json(); // Assuming JSON response
+      
+      // Handle the fetched data here
+      const mappedData = jsonData.data.map(item => ({
+        fileName: item.file_name,
+        dateOfsubmission: item.created_at
+      }))
 
-  new Chart(
-    document.getElementById('pie'),
-    {
-      type: 'pie',
-      data: {
-        labels: data.map(row => row.year),
-        datasets: [
-          {
-            label: 'Acquisitions by year',
-            data: data.map(row => row.count)
-          }
-        ]
+      const submissionsByDay = mappedData.reduce((accumulator, mappedData) => {
+        const date = new Date(mappedData.dateOfsubmission); // Convert string to Date object
+        const formattedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate()); // Extract only date without time
+        const dateString = formattedDate.toISOString().split('T')[0]; // Format date as 'YYYY-MM-DD'
+        
+        accumulator[dateString] = (accumulator[dateString] || 0) + 1;
+        return accumulator;
+      }, {});
+
+      const averageSubmissionsPerDay = Object.values(submissionsByDay).reduce((sum, count) => sum + count, 0) / Object.keys(submissionsByDay).length;
+
+      function getWeekNumber(d) {
+        d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+        const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+        const weekNumber = Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+        return weekNumber;
       }
+
+      // Group submissions by week
+      const submissionsByWeek = Object.entries(submissionsByDay).reduce((accumulator, [date, count]) => {
+        const submissionDate = new Date(date);
+        const week = `${submissionDate.getFullYear()}-${getWeekNumber(submissionDate)}`;
+        accumulator[week] = (accumulator[week] || 0) + count;
+        return accumulator;
+      }, {});
+      // Calculate average submissions per week
+      const averageSubmissionsPerWeek = Object.values(submissionsByWeek).reduce((sum, count) => sum + count, 0) / Object.keys(submissionsByWeek).length;
+
+      // Group submissions by month
+      const submissionsByMonth = Object.entries(submissionsByDay).reduce((accumulator, [date, count]) => {
+        const submissionDate = new Date(date);
+        const month = `${submissionDate.getFullYear()}-${submissionDate.getMonth() + 1}`;
+        accumulator[month] = (accumulator[month] || 0) + count;
+        return accumulator;
+      }, {});
+      // Calculate average submissions per month
+      const averageSubmissionsPerMonth = Object.values(submissionsByMonth).reduce((sum, count) => sum + count, 0) / Object.keys(submissionsByMonth).length;
+
+      const submissionCount = {
+        Day: averageSubmissionsPerDay,
+        Week: averageSubmissionsPerWeek,
+        Month: averageSubmissionsPerMonth
+      };
+
+      new Chart(
+        document.getElementById('pie'),
+        {
+          type: 'pie',
+          data: {
+            labels: ['Day', 'Week', 'Month'], // Labels for each period
+            datasets: [
+              {
+                label: 'Average Submissions',
+                data: [submissionCount.Day, submissionCount.Week, submissionCount.Month],
+                backgroundColor: [
+                  'rgba(255, 99, 132, 0.6)', // Color for Day
+                  'rgba(54, 162, 235, 0.6)', // Color for Week
+                  'rgba(255, 206, 86, 0.6)' // Color for Month
+                ],
+              }
+            ]
+          },
+        }
+      );
+      new Chart(
+        document.getElementById('bar'),
+        {
+          type: 'bar',
+          data: {
+            labels: ['Day', 'Week', 'Month'], // Labels for each period
+            datasets: [
+              {
+                label: 'Average Submissions',
+                data: submissionCount,
+                backgroundColor: [
+                  'rgba(255, 99, 132, 0.6)', // Color for Day
+                  'rgba(54, 162, 235, 0.6)', // Color for Week
+                  'rgba(255, 206, 86, 0.6)' // Color for Month
+                ],
+              }
+            ]
+          },
+        }
+      );
+    } catch (error) {
+      // Handle errors here
+      console.error('There was a problem with the fetch operation:', error);
     }
-  );
-  new Chart(
-    document.getElementById('bar'),
-    {
-      type: 'bar',
-      data: {
-        labels: data.map(row => row.year),
-        datasets: [
-          {
-            label: 'Acquisitions by year',
-            data: data.map(row => row.count)
-          }
-        ]
-      }
-    }
-  );
-})();
-</script>
-<script>
-    let userId = {{ auth()->user()->id }};
+  }
+
+  // Invoke the fetchData function
+  fetchData();
 </script>
 @vite('resources/js/gantt.js')
