@@ -41,7 +41,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/user/verify', [UserController::class, 'verify'])->name('verify');
+Route::get('/user/verify/{id}', [UserController::class, 'verifyUser'])->name('verify');
 
 // Accessible routes when logged out
 Route::middleware(['guest'])->group(function () {

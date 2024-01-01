@@ -14,11 +14,7 @@
         </p>
 
         <p>
-            <form target="_blank" action="{{$verifyRoute}}" method="POST">
-                @csrf
-                <input type="hidden" value="{{$id}}">
-                <button>Click here to get your email verified.</button>
-            </form>
+            <a target="_blank" href="{{$verifyRoute}}">Click here</a> to get your email verified.
         </p>
     </div>
 </body>

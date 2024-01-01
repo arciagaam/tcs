@@ -65,11 +65,11 @@ class UserController extends Controller
         //
     }
 
-    public function verifyUser(Request $request) {
-        User::where('id', $request->id)->update([
-            'isVerified' => 1
+    public function verifyUser(string $id) {
+        User::where('id', $id)->update([
+            'is_verified' => 1
         ]);
 
-        return redirect()->route('login')->with('toastData', ['status' => 'success', 'message' => "User verified, login now"]);
+        return redirect()->route('login')->with('toastData', ['status' => 'success', 'message' => "User verified. You can now login"]);
     }
 }
