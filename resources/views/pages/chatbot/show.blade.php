@@ -22,15 +22,15 @@
                 <div class="flex flex-col flex-1 ring-1 ring-black/20 rounded-lg overflow-clip">
                     <div class="flex">
                         @if ($conversation)
-                            <div id="messages" class="flex flex-col w-full mt-auto p-5 overflow-y-auto min-h-[60vh] max-h-[60vh]">
+                            <div id="messages" class="flex flex-col w-full gap-2 mt-auto p-5 overflow-y-auto min-h-[60vh] max-h-[60vh]">
                                 @foreach ($conversation->messages as $message)
-                                    <div class="flex {{($message->sender_user_id != 1 || !$message->sender_user_id) ? 'justify-start' : 'text-right'}}">
-                                        @if($message->sender_user_id != 1 || !$message->sender_user_id)
+                                    <div class="flex {{($message->sender_user_id != 1 && $message->sender_user_id) ? 'justify-start text-left' : 'justify-end text-right'}}">
+                                        @if($message->sender_user_id != 1 && $message->sender_user_id)
                                             <div class="flex items-center justify-center bg-primary-800 self-end rounded-full min-w-[40px] min-h-[40px]">
                                                 {{-- <img src="" alt="a"> --}}
                                             </div>
                                         @endif
-                                            <p class="py-6 ml-5 w-full rounded-xl even:bg-slate-100 {{($message->sender_user_id != 1 || !$message->sender_user_id) ? 'px-4' : ''}} ">{{$message->message}}</p>
+                                            <p class="py-6 ml-5 w-fit rounded-xl even:bg-slate-100 {{($message->sender_user_id != 1 && $message->sender_user_id) ? 'px-4' : ''}} ">{{$message->message}}</p>
                                     </div>
                                 @endforeach
                             </div>

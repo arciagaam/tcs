@@ -34,12 +34,13 @@ class ChatbotController extends Controller
             $inbox = DB::table('conversations')
             ->join('users', 'users.id', 'conversations.user_id')
             ->where('conversations.user_id', '!=', 1)
+            ->orderBy('conversations.updated_at', 'desc')
             ->get()->all();
         
             $conversation = Conversation::whereHas('messages', function($q) {
                 $q->oldest();
             })->where('user_id', $user->id)->first();
-            return view('pages.chatbot.index', compact('inbox', 'conversation', 'prompts', 'role'));
+            return view('pages.chatbot.index', compact('inbox', 'conversation', 'prompts'));
             
         } else {
 
@@ -103,6 +104,7 @@ class ChatbotController extends Controller
         $inbox = DB::table('conversations')
         ->join('users', 'users.id', 'conversations.user_id')
         ->where('conversations.user_id', '!=', 1)
+        ->orderBy('conversations.updated_at', 'desc')
         ->get()->all();
          
         $chatBotData = getChatBotData();
