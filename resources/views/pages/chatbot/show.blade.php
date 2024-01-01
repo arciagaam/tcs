@@ -24,13 +24,13 @@
                         @if ($conversation)
                             <div id="messages" class="flex flex-col w-full mt-auto p-5 overflow-y-auto min-h-[60vh] max-h-[60vh]">
                                 @foreach ($conversation->messages as $message)
-                                    <div class="flex {{$message->sender_user_id ? 'justify-start' : 'text-right'}}">
-                                        @if($message->sender_user_id)
+                                    <div class="flex {{($message->sender_user_id != 1 || !$message->sender_user_id) ? 'justify-start' : 'text-right'}}">
+                                        @if($message->sender_user_id != 1 || !$message->sender_user_id)
                                             <div class="flex items-center justify-center bg-primary-800 self-end rounded-full min-w-[40px] min-h-[40px]">
                                                 {{-- <img src="" alt="a"> --}}
                                             </div>
                                         @endif
-                                            <p class="py-6 ml-5 w-full rounded-xl even:bg-slate-100 {{$message->sender_user_id ? 'px-4' : ''}} ">{{$message->message}}</p>
+                                            <p class="py-6 ml-5 w-full rounded-xl even:bg-slate-100 {{($message->sender_user_id != 1 || !$message->sender_user_id) ? 'px-4' : ''}} ">{{$message->message}}</p>
                                     </div>
                                 @endforeach
                             </div>
@@ -40,10 +40,10 @@
                             </div>
                         @endif
                     </div>
-                    {{-- <div class="flex bg-white">
-                        <input id="inputField" type="text" placeholder="Ask something" class="p-2 input rounded-none">
+                    <div class="flex bg-white">
+                        <input id="inputField" type="text" placeholder="Respond here" class="p-2 input rounded-none">
                         <button id="sendBtn" data-sendUrl="{{route('chatbot.send')}}" data-conversationId="{{$conversation->id ?? null}}" class="px-5">Send</button>
-                    </div> --}}
+                    </div>
                 </div>
             </div>
         </div>
