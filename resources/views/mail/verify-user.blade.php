@@ -10,11 +10,15 @@
 <body>
     <div class="flex flex-col">
         <p>
-            Hello {{$name}},    
+            Hello {{$name}},
         </p>
 
         <p>
-            <a href="{{route()}}">Click here</a> to get your email verified.
+            <form target="_blank" action="{{$verifyRoute}}" method="POST">
+                @csrf
+                <input type="hidden" value="{{$id}}">
+                <button>Click here to get your email verified.</button>
+            </form>
         </p>
     </div>
 </body>

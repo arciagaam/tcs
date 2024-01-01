@@ -16,8 +16,10 @@ class AuthController extends Controller
     {   
 
         if(auth()->attempt($request->validated())) {
-            if(checkVerification(auth()->user())) {
-                return redirect()->route('login')->with('Account is not verified. Please Check your email and try again.');
+
+            if(!checkVerification(auth()->user())) {
+                $this->logout($request);
+                return redirect()->route('login')->with('error', 'Account is not verified. Please Check your email and try again.');
             }
 
             if(checkRole(auth()->user(), [5])) {

@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterRequest;
+use App\Mail\VerifyUserMail;
 use App\Models\Group;
 use App\Models\Student;
 use App\Models\StudentFile;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class RegisterController extends Controller
 {
@@ -50,6 +52,7 @@ class RegisterController extends Controller
             ]);
         }
 
+        Mail::to($request->validated('email'))->queue(new VerifyUserMail(formatName($user), $user->id));
         return redirect()->route('login')->with('toastData', ['status' => 'success', 'message' => "Account registered."]);
     }
 }

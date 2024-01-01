@@ -12,13 +12,13 @@ use Illuminate\Queue\SerializesModels;
 class VerifyUserMail extends Mailable
 {
     use Queueable, SerializesModels;
-
+    private $verifyRoute;
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(private $name, private $id)
     {
-        //
+        $this->verifyRoute = route('verify');
     }
 
     /**
@@ -37,8 +37,12 @@ class VerifyUserMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
-            with: []
+            view: 'mail.verify-user',
+            with: [
+                'name' => $this->name,
+                'id' => $this->id,
+                'verifyRoute' => $this->verifyRoute
+            ]
         );
     }
 

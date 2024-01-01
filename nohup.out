@@ -1,0 +1,5 @@
+
+   INFO  Processing jobs from the [default] queue.  
+
+  2024-01-01 07:39:31 App\Mail\VerifyUserMail ....................................................................... RUNNING
+  2024-01-01 07:39:31 App\Mail\VerifyUserMail .................................................................. 32.34ms FAIL

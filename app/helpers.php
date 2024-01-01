@@ -26,11 +26,7 @@ function checkRole($user, $roles) {
 }
 
 function checkVerification($user){
-    $isVerified = $user->is_verified;
-
-    if ($isVerified == 1) return true;
-
-    return false;
+    return $user->is_verified;
 };
 
 function getUserGroupCode() {
