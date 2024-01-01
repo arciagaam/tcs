@@ -6,6 +6,8 @@ use App\Http\Requests\ChatbotStoreRequest;
 use App\Http\Requests\ChatbotUpdateRequest;
 use App\Models\ChatBotSetting;
 use App\Models\Conversation;
+use App\Models\User;
+use App\Models\UserRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -33,11 +35,11 @@ class ChatbotController extends Controller
             ->join('users', 'users.id', 'conversations.user_id')
             ->where('conversations.user_id', '!=', 1)
             ->get()->all();
-
+        
             $conversation = Conversation::whereHas('messages', function($q) {
                 $q->oldest();
             })->where('user_id', $user->id)->first();
-            return view('pages.chatbot.index', compact('inbox', 'conversation', 'prompts'));
+            return view('pages.chatbot.index', compact('inbox', 'conversation', 'prompts', 'role'));
             
         } else {
 
@@ -110,6 +112,7 @@ class ChatbotController extends Controller
             array_push($prompts, $key);
         }
 
+                    
         $conversation = Conversation::whereHas('messages', function($q) {
             $q->oldest();
         })->where('user_id', $id)->first();
