@@ -28,7 +28,7 @@ class ConversationMessageController extends Controller
             $response = $questions[$request->message];
         }else{
             if(auth()->user->id != 1) {
-                $response = "I'm sorry I cannot answer this question.";
+                $response = "I'm sorry I cannot answer this question. Please wait for a response from the admin.";
             }
         }
 
