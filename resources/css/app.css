@@ -30,7 +30,7 @@
     }
 
     .button {
-        @apply py-2 px-4 w-fit rounded-full transition-all flex items-center justify-center
+        @apply py-2 px-4 w-fit rounded-full transition-all flex items-center justify-center outline-none
     }
 
     .button.default {
@@ -38,7 +38,7 @@
     }
 
     .button.outline {
-        @apply ring-1 border-primary-800 text-primary-800 hover:bg-primary-800 hover:text-white
+        @apply !ring-1 ring-primary-800 text-primary-800 hover:bg-primary-800 hover:text-white
     }
 
     .nav-item {

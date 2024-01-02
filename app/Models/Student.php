@@ -17,6 +17,7 @@ class Student extends Model
         'year',
         'section',
         'group_code',
+        'profile_picture',
         'status'
     ];
 
