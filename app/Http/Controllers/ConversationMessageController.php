@@ -12,7 +12,7 @@ class ConversationMessageController extends Controller
     public function sendMessage(Request $request) {
         
         if(!$request->conversationId) {
-            $conversation = Conversation::create(['user_id' => auth()->user()->id]);
+            $conversation = Conversation::firstOrCreate(['user_id' => auth()->user()->id]);
         }else {
             $conversation = Conversation::find($request->conversationId);
         }
@@ -27,7 +27,7 @@ class ConversationMessageController extends Controller
         if(array_key_exists($request->message, $questions)) {
             $response = $questions[$request->message];
         }else{
-            if(auth()->user->id != 1) {
+            if(auth()->user()->id != 1) {
                 $response = "I'm sorry I cannot answer this question. Please wait for a response from the admin.";
             }
         }

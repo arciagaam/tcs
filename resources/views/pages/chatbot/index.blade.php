@@ -47,7 +47,7 @@
                                 <div class="flex {{($message->sender_user_id != 1 && $message->sender_user_id) ? 'justify-end text-right' : 'justify-start text-left'}}">
                                     @if($message->sender_user_id == 1 || !$message->sender_user_id)
                                         <div class="flex items-center justify-center bg-blue-950 self-end rounded-full min-w-[40px] min-h-[40px]">
-                                            <img src="" alt="a">
+                                            <box-icon type='solid' color="#fff" name='bot'></box-icon>
                                         </div>
                                     @endif
                                         <p class="py-6 ml-5 w-fit rounded-xl even:bg-slate-100 {{($message->sender_user_id == 1 || !$message->sender_user_id) ? 'px-4' : ''}} ">{{$message->message}}</p>

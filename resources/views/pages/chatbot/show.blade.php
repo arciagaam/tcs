@@ -12,7 +12,7 @@
                             <div class="flex items-center justify-center bg-primary-800 self-start rounded-full min-w-[40px] min-h-[40px]"></div>
                             <div class="flex flex-col">
                                 <p>{{$conversations->first_name.' '.$conversations->middle_name.' '.$conversations->last_name}}</p> 
-                                <p class="text-sm overflow-x-hidden whitespace-nowrap">Recent Message</p> 
+                                <p class="text-sm overflow-x-hidden whitespace-nowrap"></p> 
                             </div>
                         </a>
                     @endforeach      

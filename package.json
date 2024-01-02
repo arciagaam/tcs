@@ -4,7 +4,7 @@
     "scripts": {
         "client": "vite",
         "server": "php artisan serve",
-        "queue": "nohup php artisan queue:work --daemon",
+        "queue": "php artisan queue:work --daemon",
         "dev": "npm-run-all --parallel client server queue",
         "build": "php artisan storage:link && vite build",
         "resetsl": "rm -f public/storage"
