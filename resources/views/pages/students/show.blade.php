@@ -1,7 +1,11 @@
 <x-layout>
     <div class="flex flex-row gap-10 h-screen">
         <div class="flex flex-col card w-fit h-1/2">
-            <div class="h-28 w-28 rounded-full aspect-square bg-blue-950 self-center"></div>
+          <div class="h-28 w-28 rounded-full aspect-square bg-blue-950 overflow-clip">
+            @isset($student->profile_picture)
+                <img src="{{asset('storage/' . $student->profile_picture)}}" alt="profile picture">
+            @endisset
+        </div>
     
             <div class="flex flex-col">
                 <p class="font-medium text-black/50 text-sm">Full name</p>
