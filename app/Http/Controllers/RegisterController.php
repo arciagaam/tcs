@@ -52,7 +52,7 @@ class RegisterController extends Controller
             ]);
         }
 
-        Mail::to($request->validated('email'))->queue(new VerifyUserMail(formatName($user), $user->id, route('verify', ['id' => $user->id])));
+        // Mail::to($request->validated('email'))->queue(new VerifyUserMail(formatName($user), $user->id, route('verify', ['id' => $user->id])));
         return redirect()->route('login')->with('toastData', ['status' => 'success', 'message' => "Account registered."]);
     }
 }

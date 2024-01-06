@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('last_name');
-            $table->smallInteger('is_verified', false)->default(0);
+            $table->smallInteger('is_verified', false)->default(1);
             $table->string('email')->unique();
             $table->string('password');
             $table->string('request_code')->nullable();
