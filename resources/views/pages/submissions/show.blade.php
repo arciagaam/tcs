@@ -15,32 +15,33 @@
             <div class="flex gap-2">
                 <p>{{ $submission->file_name }}</p>
                 <a href="{{ asset('storage/' . $submission->path) }}"
-                    download="{{ $submission->group_code }}-{{ $submission->name }}" class="button default p-0 px-3 text-sm">Download
+                    download="{{ $submission->group_code }}-{{ $submission->name }}"
+                    class="button default p-0 px-3 text-sm">Download
                     File</a>
             </div>
         </div>
-        @if (checkRole(auth()->user(), [1, 2, 3, 4]))
 
-            <hr>
-            @if (count($submission->check))
-                <h2 class="text-lg font-medium">Submission Checked!</h2>
-                <div class="input-group">
-                    <label for="group_code">Remarks</label>
-                    <textarea disabled readonly class="resize-none input rounded-lg" name="remarks" id="remarks" cols="30"
-                        rows="10">{{ $submission->check[0]->remarks ?? 'No remarks.' }}</textarea>
-                    @error('group_code')
-                        <p class="self-end text-xs text-red-400">{{ $message }}</p>
-                    @enderror
+        <hr>
+        @if (count($submission->check))
+            <h2 class="text-lg font-medium">Submission Checked!</h2>
+            <div class="input-group">
+                <label for="group_code">Remarks</label>
+                <textarea disabled readonly class="resize-none input rounded-lg" name="remarks" id="remarks" cols="30"
+                    rows="10">{{ $submission->check[0]->remarks ?? 'No remarks.' }}</textarea>
+                @error('group_code')
+                    <p class="self-end text-xs text-red-400">{{ $message }}</p>
+                @enderror
+            </div>
+            <div class="flex flex-col">
+                <h3>Attachment:</h3>
+                <div class="flex gap-2">
+                    <p>{{ $submission->check[0]->file_name }}</p>
+                    <a href="{{ asset('storage/' . $submission->check[0]->file_path) }}" download
+                        class="button default p-0 px-3 text-sm">Download File</a>
                 </div>
-                <div class="flex flex-col">
-                    <h3>Attachment:</h3>
-                    <div class="flex gap-2">
-                        <p>{{ $submission->check[0]->file_name }}</p>
-                        <a href="{{ asset('storage/' . $submission->check[0]->file_path) }}" download
-                            class="button default p-0 px-3 text-sm">Download File</a>
-                    </div>
-                </div>
-            @else
+            </div>
+        @else
+            @if (checkRole(auth()->user(), [1, 2, 3, 4]))
                 <form method="POST" action="{{ route('submission.check', ['submission' => $submission]) }}"
                     class="flex flex-col w-fit gap-5" enctype="multipart/form-data">
                     @csrf
