@@ -28,7 +28,7 @@ class RegisterController extends Controller
         $user = User::create($request->safe()->except(['group_code', 'year', 'section']));
         $student = Student::create([
             'user_id' => $user->id,
-            ...$request->safe()->only(['year', 'section', 'group_code'])
+            ...$request->safe()->only(['year', 'section', 'group_code', 'thesis_title'])
         ]);
 
 

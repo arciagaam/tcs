@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('section');
             $table->string('gantt_chart_image_path')->nullable();
             $table->string('profile_picture')->nullable();
+            $table->string('thesis_title')->nullable(); // 1 pending, 2 approved, 3 declined
             $table->tinyInteger('status')->default(1); // 1 pending, 2 approved, 3 declined
             $table->timestamps();
         });

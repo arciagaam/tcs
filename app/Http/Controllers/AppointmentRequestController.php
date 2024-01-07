@@ -22,11 +22,39 @@ class AppointmentRequestController extends Controller
             $studentIds = TeacherStudent::whereIn('teacher_id', $teacherIds)->get()->map(fn($value) => $value->student_id);
             $groupCodes = Student::whereIn('id', $studentIds)->get()->map(fn($value) => $value->group_code);
 
-            $pendingAppointments = Appointment::whereIn('group_code', $groupCodes)->with(['user.student'])->whereIn('user_role_id', $teacherIds)->where('status', 1)->paginate(10);
-            $appointmentsList = Appointment::whereIn('group_code', $groupCodes)->with(['user.student'])->whereIn('user_role_id', $teacherIds)->where('status', '!=', 1)->paginate(10);
+            $pendingAppointments = Appointment::whereIn('group_code', $groupCodes)
+            ->with(['user.student'])->whereIn('user_role_id', $teacherIds)
+            ->where('status', 1)
+            ->when(request()->search_active, function($query) {
+                $query->where('group_code', request()->search_active)
+                ->orWhere('name', 'like', request()->search_active. '%');
+            })
+            ->paginate(10);
+
+            $appointmentsList = Appointment::whereIn('group_code', $groupCodes)
+            ->with(['user.student'])
+            ->whereIn('user_role_id', $teacherIds)
+            ->where('status', '!=', 1)
+            ->when(request()->search, function($query) {
+                $query->where('group_code', request()->search)
+                ->orWhere('name', 'like', request()->search. '%');
+            })
+            ->paginate(10);
+
         } else {
-            $pendingAppointments = Appointment::with(['user.student'])->where('status', 1)->paginate(10);
-            $appointmentsList = Appointment::with(['user.student'])->where('status', '!=', 1)->paginate(10);
+            $pendingAppointments = Appointment::with(['user.student'])->where('status', 1)
+            ->when(request()->search_active, function($query) {
+                $query->where('group_code', request()->search_active)
+                ->orWhere('name', 'like', request()->search_active. '%');
+            })
+            ->paginate(10);
+
+            $appointmentsList = Appointment::with(['user.student'])->where('status', '!=', 1)
+            ->when(request()->search, function($query) {
+                $query->where('group_code', request()->search)
+                ->orWhere('name', 'like', request()->search. '%');
+            })
+            ->paginate(10);
         }
         
         return view('pages.appointments.requests.index', compact('pendingAppointments', 'appointmentsList'));

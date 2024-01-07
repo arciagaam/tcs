@@ -20,9 +20,47 @@ class TrackingController extends Controller
             $studentIds = TeacherStudent::whereIn('teacher_id', $teacherIds)->get()->map(fn($value) => $value->student_id);
             $groupCodes = Student::whereIn('id', $studentIds)->get()->map(fn($value) => $value->group_code);
             
-            $trackings = Tracking::latest()->whereIn('group_code', $groupCodes)->where('to_user_id', auth()->user()->id)->paginate(10);
+            $trackings = Tracking::latest()
+            ->whereIn('group_code', $groupCodes)
+            ->where('to_user_id', auth()->user()->id)
+            ->when(request()->search, function($query){
+                $query->whereHas('studentSubmission', function($ssQ) {
+
+                    $ssQ->whereHas('student', function($sQ) {
+                        $sQ->whereHas('user', function($uQ) {
+                            $uQ->whereRaw('CONCAT(first_name, " ", middle_name, " ", last_name) like ?', [request()->search."%"])
+                            ->orWhereRaw('CONCAT(first_name," ", last_name) like ?', [request()->search."%"])
+                            ->orWhere('first_name', 'like', request()->search . '%')
+                            ->orWhere('middle_name', 'like', request()->search . '%')
+                            ->orWhere('last_name', 'like', request()->search . '%');
+                        });
+                    });
+                })
+                ->orWhere('name', 'like', request()->search . '%')
+                ->orWhere('number', request()->search)
+                ->orWhere('group_code', request()->search);
+            })
+            ->paginate(10);
         } else {
-            $trackings = Tracking::latest()->paginate(10);
+            $trackings = Tracking::latest()
+            ->when(request()->search, function($query){
+                $query->whereHas('studentSubmission', function($ssQ) {
+
+                    $ssQ->whereHas('student', function($sQ) {
+                        $sQ->whereHas('user', function($uQ) {
+                            $uQ->whereRaw('CONCAT(first_name, " ", middle_name, " ", last_name) like ?', [request()->search."%"])
+                            ->orWhereRaw('CONCAT(first_name," ", last_name) like ?', [request()->search."%"])
+                            ->orWhere('first_name', 'like', request()->search . '%')
+                            ->orWhere('middle_name', 'like', request()->search . '%')
+                            ->orWhere('last_name', 'like', request()->search . '%');
+                        });
+                    });
+                })
+                ->orWhere('name', 'like', request()->search . '%')
+                ->orWhere('number', request()->search)
+                ->orWhere('group_code', request()->search);
+            })
+            ->paginate(10);
         }
         return view('pages.tracking.index', compact('trackings'));
     }

@@ -18,6 +18,7 @@ class Student extends Model
         'section',
         'group_code',
         'profile_picture',
+        'thesis_title',
         'status'
     ];
 

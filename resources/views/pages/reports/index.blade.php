@@ -87,9 +87,12 @@
 
     @if (checkRole(auth()->user(), [1,2,3,4]))
         <div class="card">
-            <h2 class="text-lg font-medium">
-                Pending Reports
-            </h2>
+            <div class="flex justify-between w-full">
+                <h2 class="text-lg font-medium">
+                    Pending Reports
+                </h2>
+                <x-table.search placeholder="Search for Group Code, Title, or Email" id="pending_search"/>
+            </div>
             
             <div class="flex">
                 <x-table.main class="w-full table-auto">
@@ -152,12 +155,15 @@
         </div>
 
         <div class="card">
-            <div class="flex w-full justify-between">
+            <div class="flex w-full justify-between items-center">
                 <h2 class="text-lg font-medium">
                     Reports List
                 </h2>
 
-                <a target="_blank" href="{{route('reports.print')}}" class="button default"> Print Reports List</a>
+                <div class="flex flex-1 gap-3 justify-end">
+                    <x-table.search placeholder="Search for Group Code, Title, or Email" id="search"/>
+                    <a target="_blank" href="{{route('reports.print')}}" class="button default"> Print Reports List</a>
+                </div>
             </div>
             
             <div class="flex">

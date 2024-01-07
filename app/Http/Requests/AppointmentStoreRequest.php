@@ -23,6 +23,7 @@ class AppointmentStoreRequest extends FormRequest
     {
         return [
             'group_code' => 'required|exists:students,group_code',
+            'role_id' => 'nullable',
             'panel' => 'nullable',
             'name' => 'nullable',
             'email' => 'nullable',

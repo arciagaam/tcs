@@ -7,7 +7,7 @@
     <div class="flex flex-col bg-white p-5 rounded-lg shadow-sm gap-5">
 
         <div class="flex justify-end">
-            {{-- <x-table.search /> --}}
+            <x-table.search placeholder="Search for Group Code" id="groupCode"/>
         </div>
 
         <x-table.main class="w-full table-auto">
@@ -54,7 +54,7 @@
     
     <div class="card">
         <div class="flex justify-end">
-            {{-- <x-table.search /> --}}
+            <x-table.search placeholder="Search student or group code" id="student"/>
         </div>
         <div class="flex">
             <x-table.main class="w-full table-auto">

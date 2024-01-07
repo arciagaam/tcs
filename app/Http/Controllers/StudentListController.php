@@ -23,11 +23,29 @@ class StudentListController extends Controller
         $teacherId = UserRole::where('user_id', auth()->user()->id)->where('role_id', $role->id)->first()->id;
         $students = TeacherStudent::with('student')->where('teacher_id', $teacherId)->get()->map(fn($value) => $value->student_id)->values();
         // dd($students);
-        $submissions = StudentSubmission::with('student.user')->whereIn('student_id', $students)->where('role_id', $role->id)->paginate(20);
-        $studentList = Student::whereHas('user', function($q) {
-            $q->withoutTrashed();
-        })->paginate();
+        $submissions = StudentSubmission::with('student.user')
+        ->whereIn('student_id', $students)
+        ->where('role_id', $role->id)
+        ->when(request()->groupCode, function($query) {
+            $query->where('group_code', request()->groupCode);
+        })
+        ->paginate(20)
+        ->appends(request()->query());
 
+        $studentList = Student::whereHas('user', function($q) {
+            $q->when(request()->student, function($query) {
+                $query->whereRaw('CONCAT(users.first_name, " ", users.middle_name, " ", users.last_name) like ?', [request()->student."%"])
+                ->orWhereRaw('CONCAT(users.first_name," ", users.last_name) like ?', [request()->student."%"])
+                ->orWhere('users.first_name', 'like', request()->student . '%')
+                ->orWhere('users.middle_name', 'like', request()->student . '%')
+                ->orWhere('users.last_name', 'like', request()->student . '%')
+                ->orWhere('students.group_code', request()->student);
+            })
+            ->withoutTrashed();
+        })
+        ->paginate()
+        ->appends(request()->query());
+        
         return view('pages.admin_pages.students.list.index', compact('submissions', 'role', 'studentList'));
     }
 

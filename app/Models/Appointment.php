@@ -18,6 +18,7 @@ class Appointment extends Model
         'name',
         'email',
         'document_path',
+        'video_path',
         'remarks',
         'status',
         'start_date',

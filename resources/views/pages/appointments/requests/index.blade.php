@@ -1,14 +1,18 @@
 <x-layout>
     <div class="flex flex-col gap-1">
-        <a href="{{route('appointments.index')}}" class="underline w-fit">Back to Appointments</a>
+        <a href="{{ route('appointments.index') }}" class="underline w-fit">Back to Appointments</a>
         <x-page-title>Appointment Requests</x-page-title>
     </div>
 
     <div class="flex flex-col bg-white rounded-lg shadow-sm gap-5 p-5">
-        <h2 class="text-lg font-medium">
-            Active Requests
-        </h2>
-        
+        <div class="flex justify-between w-full items-center">
+            <h2 class="text-lg font-medium">
+                Active Requests
+            </h2>
+
+            <x-table.search placeholder="Search for Group Code or Name" id="search_active"/>
+        </div>
+
         <div class="flex">
             <x-table.main class="w-full table-auto">
                 <x-table.head>
@@ -19,6 +23,7 @@
                         <x-table.header>Remarks</x-table.header>
                         <x-table.header>Date</x-table.header>
                         <x-table.header>Purpose / Nature</x-table.header>
+                        <x-table.header>Video</x-table.header>
                         {{-- <x-table.header>Year and Section</x-table.header> --}}
                         <x-table.header>Actions</x-table.header>
                     </x-table.row>
@@ -27,13 +32,23 @@
                     @if (count($pendingAppointments))
                         @foreach ($pendingAppointments as $appointment)
                             <x-table.row class="odd:bg-white even:bg-primary-50">
-                                <x-table.data>{{$appointment->group_code}}</x-table.data>
-                                <x-table.data>{{$appointment->name}}</x-table.data>
-                                <x-table.data>{{$appointment->remarks ?? 'N/A'}}</x-table.data>
-                                <x-table.data>{{$appointment->start_date->format('Y/m/d H:m')}} - {{$appointment->end_date->format('Y/m/d H:m')}}</x-table.data>
+                                <x-table.data>{{ $appointment->group_code }}</x-table.data>
+                                <x-table.data>{{ $appointment->name }}</x-table.data>
+                                <x-table.data>{{ $appointment->remarks ?? 'N/A' }}</x-table.data>
+                                <x-table.data>{{ $appointment->start_date->format('Y/m/d H:m') }} -
+                                    {{ $appointment->end_date->format('Y/m/d H:m') }}</x-table.data>
                                 <x-table.data>
-                                    @if($appointment->document_path != '')
-                                        <a href="{{asset('storage/'.$appointment->document_path)}}" download="Group {{$appointment->group_code}} - Appointment {{$appointment->created_at->format('Y/m/d H:m')}}">{{explode('/',$appointment->document_path)[1] ?? 'N/A'}}</a>
+                                    @if ($appointment->document_path != '')
+                                        <a href="{{ asset('storage/' . $appointment->document_path) }}"
+                                            download="Group {{ $appointment->group_code }} - Appointment {{ $appointment->created_at->format('Y/m/d H:m') }}">{{ explode('/', $appointment->document_path)[1] ?? 'N/A' }}</a>
+                                    @else
+                                        N/A
+                                    @endif
+                                </x-table.data>
+                                <x-table.data>
+                                    @if ($appointment->video_path != '')
+                                        <a href="{{ asset('storage/' . $appointment->video_path) }}"
+                                            download="Group {{ $appointment->group_code }} - Appointment {{ $appointment->created_at->format('Y/m/d H:m') }}">{{ explode('/', $appointment->video_path)[1] ?? 'N/A' }}</a>
                                     @else
                                         N/A
                                     @endif
@@ -41,14 +56,19 @@
                                 {{-- <x-table.data>{{$appointment->user->student->year}} - {{$appointment->user->student->section}}</x-table.data> --}}
                                 <x-table.data>
                                     <div class="flex gap-2">
-                                        <form action="{{route('appointments.update', ['appointment' => $appointment->id])}}" method="POST">
+                                        <form
+                                            action="{{ route('appointments.update', ['appointment' => $appointment->id]) }}"
+                                            method="POST">
                                             @csrf
                                             @method('PUT')
                                             <input type="hidden" value="1" name="verdict">
                                             <button class="button default">Approve</button>
                                         </form>
-                                        <a href="{{route('appointments.requests.edit', ['request' => $appointment->id])}}" class="button default">Edit</a>
-                                        <form action="{{route('appointments.update', ['appointment' => $appointment->id])}}" method="POST">
+                                        <a href="{{ route('appointments.requests.edit', ['request' => $appointment->id]) }}"
+                                            class="button default">Edit</a>
+                                        <form
+                                            action="{{ route('appointments.update', ['appointment' => $appointment->id]) }}"
+                                            method="POST">
                                             @csrf
                                             @method('PUT')
                                             <input type="hidden" value="0" name="verdict">
@@ -59,27 +79,31 @@
                             </x-table.row>
                         @endforeach
                     @else
-                        <x-table-no-data/>    
+                        <x-table-no-data />
                     @endif
                 </x-table.body>
             </x-table.main>
         </div>
         <div class="flex">
-            {{$pendingAppointments->links()}}
+            {{ $pendingAppointments->links() }}
         </div>
     </div>
 
     <div class="flex flex-col bg-white rounded-lg shadow-sm gap-5 p-5">
 
-        <div class="flex w-full justify-between">
+        <div class="flex w-full justify-between items-center">
             <h2 class="text-lg font-medium">
                 Appointment List
             </h2>
             
-            <a target="_blank" href="{{route('appointments.print')}}" class="button default">Print Appointment List</a>
+
+            <div class="flex flex-1 gap-3 justify-end">
+                <a target="_blank" href="{{ route('appointments.print') }}" class="button default">Print Appointment List</a>
+                <x-table.search placeholder="Search for Group Code or Name" id="search"/>
+            </div>
         </div>
-        
-        
+
+
 
         <div class="flex">
             <x-table.main class="w-full table-auto">
@@ -91,37 +115,48 @@
                         <x-table.header>Remarks</x-table.header>
                         <x-table.header>Date</x-table.header>
                         <x-table.header>Purpose / Nature</x-table.header>
+                        <x-table.header>Video</x-table.header>
                         {{-- <x-table.header>Year and Section</x-table.header> --}}
                         <x-table.header>Status</x-table.header>
                     </x-table.row>
                 </x-table.head>
                 <x-table.body>
-                    @if(count($appointmentsList))
+                    @if (count($appointmentsList))
                         @foreach ($appointmentsList as $appointment)
                             <x-table.row class="odd:bg-white even:bg-primary-50">
-                                <x-table.data>{{$appointment->group_code}}</x-table.data>
-                                <x-table.data>{{$appointment->name ?? 'N/A'}}</x-table.data>
-                                <x-table.data>{{$appointment->remarks ?? 'N/A'}}</x-table.data>
-                                <x-table.data>{{$appointment->start_date->format('Y/m/d H:m')}} - {{$appointment->end_date->format('Y/m/d H:m')}}</x-table.data>
+                                <x-table.data>{{ $appointment->group_code }}</x-table.data>
+                                <x-table.data>{{ $appointment->name ?? 'N/A' }}</x-table.data>
+                                <x-table.data>{{ $appointment->remarks ?? 'N/A' }}</x-table.data>
+                                <x-table.data>{{ $appointment->start_date->format('Y/m/d H:m') }} -
+                                    {{ $appointment->end_date->format('Y/m/d H:m') }}</x-table.data>
                                 <x-table.data>
-                                    @if($appointment->document_path != '')
-                                        <a href="{{asset('storage/'.$appointment->document_path)}}" download="Group {{$appointment->group_code}} - Appointment {{$appointment->created_at->format('Y/m/d H:m')}}">{{explode('/',$appointment->document_path)[1] ?? 'N/A'}}</a>
+                                    @if ($appointment->document_path != '')
+                                        <a href="{{ asset('storage/' . $appointment->document_path) }}"
+                                            download="Group {{ $appointment->group_code }} - Appointment {{ $appointment->created_at->format('Y/m/d H:m') }}">{{ explode('/', $appointment->document_path)[1] ?? 'N/A' }}</a>
+                                    @else
+                                        N/A
+                                    @endif
+                                </x-table.data>
+                                <x-table.data>
+                                    @if ($appointment->video_path != '')
+                                        <a href="{{ asset('storage/' . $appointment->video_path) }}"
+                                            download="Group {{ $appointment->group_code }} - Appointment {{ $appointment->created_at->format('Y/m/d H:m') }}">{{ explode('/', $appointment->video_path)[1] ?? 'N/A' }}</a>
                                     @else
                                         N/A
                                     @endif
                                 </x-table.data>
                                 {{-- <x-table.data>{{$appointment->user->student->year}} - {{$appointment->user->student->section}}</x-table.data> --}}
-                                <x-table.data>{{$appointment->status == 2 ? 'Approved' : 'Declined'}}</x-table.data>
+                                <x-table.data>{{ $appointment->status == 2 ? 'Approved' : 'Declined' }}</x-table.data>
                             </x-table.row>
                         @endforeach
                     @else
-                        <x-table-no-data/>
+                        <x-table-no-data />
                     @endif
                 </x-table.body>
             </x-table.main>
         </div>
         <div class="flex">
-            {{$appointmentsList->links()}}
+            {{ $appointmentsList->links() }}
         </div>
     </div>
 </x-layout>

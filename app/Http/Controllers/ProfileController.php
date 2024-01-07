@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateProfileRequest;
 use App\Models\Student;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
@@ -15,11 +17,7 @@ class ProfileController extends Controller
         return view('pages.student_pages.profile.edit');
     }
 
-    public function update(Student $profile, Request $request) {
-        $request->validate([
-            'profile_picture' => 'required'
-        ]);
-
+    public function update(Student $profile, UpdateProfileRequest $request) {
         $image = $request->profile_picture;
 
         if (isset($image)) {
@@ -29,6 +27,8 @@ class ProfileController extends Controller
             $profile->update(['profile_picture' => $newImage]);
         }
 
-        return redirect()->route('profile.index')->with('toastData', ['status' => 'success', 'message' => "Image Updated"]);
+        User::where('id', $profile->user_id)->update($request->safe()->only(['first_name', 'middle_name', 'last_name', 'email']));
+        $profile->update($request->safe()->except(['first_name', 'middle_name', 'last_name', 'email', 'profile_picture']));
+        return redirect()->route('profile.index')->with('toastData', ['status' => 'success', 'message' => "Profile Updated"]);
     }
 }

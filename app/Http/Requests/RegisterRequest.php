@@ -24,6 +24,7 @@ class RegisterRequest extends FormRequest
 
         // dd($this->all());
         return [
+            'thesis_title' => 'required',
             'group_code' => 'required',
             'first_name' => 'required',
             'middle_name' => 'nullable',
@@ -39,6 +40,37 @@ class RegisterRequest extends FormRequest
             'ta_iso' => 'required',
             'te_iso' => 'required',
             'se_iso' => 'required',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'ta_user_id' => [
+                'required' => 'Select a thesis adviser'
+            ],
+
+            'te_user_id' => [
+                'required' => 'Select a technical editor'
+            ],
+
+            'se_user_id' => [
+                'required' => 'Select a system expert'
+            ],
+
+            'ta_iso' => [
+                'required' => 'Submit ISO for Thesis Adviser'
+            ],
+
+            'te_iso' => [
+                'required' => 'Submit ISO for Technical Editor'
+            ],
+
+            'se_iso' => [
+                'required' => 'Submit ISO for System Expert'
+            ],
+
+
         ];
     }
 }

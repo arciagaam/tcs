@@ -17,7 +17,16 @@ class TeacherController extends Controller
         
         $teachers = User::whereHas('roles', function($q){
             $q->whereIn('roles.id', [2,3,4]);
-        })->paginate(20);
+        })
+        ->when(request()->search, function($query) {
+            $query->whereRaw('CONCAT(users.first_name, " ", users.middle_name, " ", users.last_name) like ?', [request()->search."%"])
+            ->orWhereRaw('CONCAT(users.first_name," ", users.last_name) like ?', [request()->search."%"])
+            ->orWhere('users.first_name', 'like', request()->search . '%')
+            ->orWhere('users.middle_name', 'like', request()->search . '%')
+            ->orWhere('users.last_name', 'like', request()->search . '%')
+            ->orWhere('users.email', 'like', request()->search . '%');
+        })
+        ->paginate(20);
 
         return view('pages.teachers.index', compact('teachers'));
     }

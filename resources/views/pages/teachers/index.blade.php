@@ -91,8 +91,9 @@
         <h2 class="text-lg font-medium">Teachers List</h2>
 
         <div class="flex justify-end">
-            {{-- <x-table.search /> --}}
+            <x-table.search placeholder="Search for teacher" id="search" />
         </div>
+
         <div class="flex">
             <x-table.main class="w-full table-auto">
                 <x-table.head>

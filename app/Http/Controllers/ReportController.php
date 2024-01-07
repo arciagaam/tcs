@@ -21,11 +21,38 @@ class ReportController extends Controller
             $studentIds = TeacherStudent::whereIn('teacher_id', $teacherIds)->get()->map(fn ($value) => $value->student_id);
             $groupCodes = Student::whereIn('id', $studentIds)->get()->map(fn ($value) => $value->group_code);
 
-            $pendingReports = Report::whereIn('group_code', $groupCodes)->whereIn('user_role_id', $teacherIds)->where('status', 1)->paginate(10);
-            $reportsList = Report::whereIn('group_code', $groupCodes)->whereIn('user_role_id', $teacherIds)->where('status', '!=', 1)->paginate(10);
+            $pendingReports = Report::whereIn('group_code', $groupCodes)->whereIn('user_role_id', $teacherIds)->where('status', 1)
+            ->when(request()->pending_search, function($query) {
+                $query->where('group_code', request()->pending_search)
+                ->orWhere('title', request()->pending_search)
+                ->orWhere('email', request()->pending_search);
+            })
+            ->paginate(10);
+
+            $reportsList = Report::whereIn('group_code', $groupCodes)->whereIn('user_role_id', $teacherIds)->where('status', '!=', 1)
+            ->when(request()->search, function($query) {
+                $query->where('group_code', request()->search)
+                ->orWhere('title', request()->search)
+                ->orWhere('email', request()->search);
+            })
+            ->paginate(10);
+            
         } else {
-            $pendingReports = Report::where('status', 1)->paginate(10);
-            $reportsList = Report::where('status', '!=', 1)->paginate(10);
+            $pendingReports = Report::where('status', 1)
+            ->when(request()->pending_search, function($query) {
+                $query->where('group_code', request()->pending_search)
+                ->orWhere('title', request()->pending_search)
+                ->orWhere('email', request()->pending_search);
+            })
+            ->paginate(10);
+
+            $reportsList = Report::where('status', '!=', 1)
+            ->when(request()->search, function($query) {
+                $query->where('group_code', request()->search)
+                ->orWhere('title', request()->search)
+                ->orWhere('email', request()->search);
+            })
+            ->paginate(10);
         }
 
         $panels = null;

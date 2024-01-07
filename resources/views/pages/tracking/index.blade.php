@@ -5,6 +5,10 @@
         <h2 class="text-lg font-medium">
             Tracker
         </h2>
+
+        <div class="flex justify-end">
+            <x-table.search placeholder="Search for Tracking Number, Student, or Group Code" id="search"/>
+        </div>
         
         <div class="flex">
             <x-table.main class="w-full table-auto">
